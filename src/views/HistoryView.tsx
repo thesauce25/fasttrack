@@ -1,6 +1,7 @@
 import { useStore } from "../store";
-import { formatHoursShort, fastTypeLabel } from "../lib/fasting";
+import { formatHoursShort, getCurrentZone } from "../lib/fasting";
 import { CheckCircle, XCircle, Trash2, Moon } from "lucide-react";
+import { ZoneIcon } from "../components/ZoneIcon";
 import { useState } from "react";
 
 const formatDate = (ts: number) => {
@@ -51,7 +52,11 @@ export function HistoryView() {
                   ) : (
                     <XCircle size={15} color="var(--danger)" strokeWidth={1.5} />
                   )}
-                  <span className="text-[15px]">{fastTypeLabel(fast.fastType)}</span>
+                  <span className="text-[15px]">
+                    {fast.actualDuration
+                      ? formatHoursShort(fast.actualDuration) + " fast"
+                      : "Fast"}
+                  </span>
                 </div>
                 <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
                   {formatDate(fast.startTime)}
@@ -59,16 +64,23 @@ export function HistoryView() {
               </div>
 
               <div className="flex items-center justify-between pl-[23px]">
-                <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
-                  {formatTime(fast.startTime)} — {fast.endTime ? formatTime(fast.endTime) : "–"}
-                </span>
-                <div className="flex items-center gap-3">
-                  <span
-                    className="text-[15px] font-medium timer-digits"
-                    style={{ color: fast.status === "completed" ? "var(--success)" : "var(--text-secondary)" }}
-                  >
-                    {fast.actualDuration ? formatHoursShort(fast.actualDuration) : "–"}
+                <div>
+                  <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
+                    {formatTime(fast.startTime)} — {fast.endTime ? formatTime(fast.endTime) : "–"}
                   </span>
+                  {fast.actualDuration && fast.actualDuration > 0 && (() => {
+                    const z = getCurrentZone(fast.actualDuration);
+                    return (
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <ZoneIcon zoneId={z.id} color={z.color} size={11} />
+                        <span className="text-[11px]" style={{ color: z.color }}>
+                          Reached {z.name}
+                        </span>
+                      </div>
+                    );
+                  })()}
+                </div>
+                <div className="flex items-center gap-3">
                   {confirmDelete === fast.id ? (
                     <button
                       onClick={() => { deleteFast(fast.id); setConfirmDelete(null); }}
