@@ -37,7 +37,7 @@
   --fast-accent-glow: #7a78f0;
 
   /* Apple separators */
-  --separator: rgba(84, 84, 88, 0.36);              /* separator (dark) */
+  --separator: rgba(84, 84, 88, 0.6);                /* separator (dark) */
   --separator-opaque: #38383a;                       /* opaqueSeparator (dark) */
 
   /* Apple system fills */

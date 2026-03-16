@@ -25,7 +25,7 @@ export function TabBar({ active, onChange }: TabBarProps) {
             onClick={() => onChange(id)}
             className="flex flex-col items-center justify-center gap-[2px] flex-1 min-w-[64px] min-h-[44px] py-1"
             style={{
-              color: isActive ? "var(--accent)" : "var(--text-muted)",
+              color: isActive ? "var(--accent)" : "#8e8e93",
               transition: "color 0.15s ease",
               background: "none",
               border: "none",
