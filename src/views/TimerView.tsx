@@ -188,41 +188,30 @@ function IdleState() {
   const todayIdx = (dayOfWeek + 6) % 7; // Monday=0
 
   return (
-    <div className="scrollable h-full">
-      <div className="px-5 pt-4 pb-8">
-        {/* Hero greeting */}
-        <div className="flex items-start justify-between mb-1">
-          <h1 className="text-[28px] font-bold" style={{ letterSpacing: "-0.01em" }}>
-            {greeting}
-          </h1>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full mt-1"
-            style={{ background: "var(--fill-tertiary)" }}>
-            <Flame size={13} strokeWidth={1.5}
-              style={{ color: stats.currentStreak > 0 ? "var(--warning)" : "var(--text-quaternary)" }} />
-            <span className="text-[13px] font-semibold timer-digits"
-              style={{ color: stats.currentStreak > 0 ? "var(--warning)" : "var(--text-quaternary)" }}>
-              {stats.currentStreak}
-            </span>
+    <div className="flex flex-col h-full">
+      {/* Scrollable content */}
+      <div className="flex-1 min-h-0 scrollable">
+        <div className="px-5 pt-4 pb-4">
+          {/* Hero greeting */}
+          <div className="flex items-start justify-between mb-1">
+            <h1 className="text-[28px] font-bold" style={{ letterSpacing: "-0.01em" }}>
+              {greeting}
+            </h1>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full mt-1"
+              style={{ background: "var(--fill-tertiary)" }}>
+              <Flame size={13} strokeWidth={1.5}
+                style={{ color: stats.currentStreak > 0 ? "var(--warning)" : "var(--text-quaternary)" }} />
+              <span className="text-[13px] font-semibold timer-digits"
+                style={{ color: stats.currentStreak > 0 ? "var(--warning)" : "var(--text-quaternary)" }}>
+                {stats.currentStreak}
+              </span>
+            </div>
           </div>
-        </div>
-        <p className="text-[15px] mb-6" style={{ color: "var(--text-secondary)" }}>
-          {subtitle}
-        </p>
+          <p className="text-[15px] mb-5" style={{ color: "var(--text-secondary)" }}>
+            {subtitle}
+          </p>
 
-        {/* Start fasting CTA */}
-        <button
-          onClick={() => startFast()}
-          className="w-full h-[56px] text-[17px] font-semibold mb-6 transition-all duration-150 active:scale-[0.97] active:opacity-90"
-          style={{
-            borderRadius: "var(--radius-btn)",
-            background: "var(--fast-accent)",
-            color: "white",
-          }}
-        >
-          Begin Fasting
-        </button>
-
-        {/* Progress stats */}
+          {/* Progress stats */}
         {stats.totalFasts > 0 && (
           <>
             <div className="card overflow-hidden mb-2">
@@ -300,6 +289,22 @@ function IdleState() {
             {teaser}
           </p>
         </div>
+        </div>
+      </div>
+
+      {/* Fixed CTA — bottom thumb zone */}
+      <div className="shrink-0 px-5 pt-3 pb-3">
+        <button
+          onClick={() => startFast()}
+          className="w-full h-[56px] text-[17px] font-semibold transition-all duration-150 active:scale-[0.97] active:opacity-90"
+          style={{
+            borderRadius: "var(--radius-btn)",
+            background: "var(--fast-accent)",
+            color: "white",
+          }}
+        >
+          Begin Fasting
+        </button>
       </div>
     </div>
   );
