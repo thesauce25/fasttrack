@@ -152,12 +152,17 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
               type="time"
               value={customTime}
               onChange={(e) => setCustomTime(e.target.value)}
-              className="w-full h-[44px] px-4 mb-3 text-[17px] text-center"
+              className="h-[44px] px-4 mb-3 text-[17px] text-center"
               style={{
+                width: "100%",
+                maxWidth: "100%",
+                boxSizing: "border-box",
                 borderRadius: "var(--radius-btn)",
                 background: "var(--bg-tertiary)",
                 color: "var(--text-primary)",
                 border: "0.33px solid var(--separator)",
+                WebkitAppearance: "none",
+                appearance: "none",
               }}
             />
             <div className="flex gap-3">

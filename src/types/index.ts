@@ -39,7 +39,7 @@ export interface Stats {
   totalFasts: number;
   totalHoursFasted: number;
   averageFastHours: number;
-  completionRate: number;
+  longestFastHours: number;
   thisWeekFasts: number;
   thisWeekHours: number;
 }

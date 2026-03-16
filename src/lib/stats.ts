@@ -2,7 +2,6 @@ import type { FastSession, Stats } from "../types";
 
 export function computeStats(fasts: FastSession[]): Stats {
   const completed = fasts.filter((f) => f.status === "completed");
-  const broken = fasts.filter((f) => f.status === "broken");
 
   const totalFasts = completed.length;
   const totalMs = completed.reduce(
@@ -11,10 +10,11 @@ export function computeStats(fasts: FastSession[]): Stats {
   );
   const totalHoursFasted = totalMs / 3_600_000;
   const averageFastHours = totalFasts > 0 ? totalHoursFasted / totalFasts : 0;
-  const completionRate =
-    totalFasts + broken.length > 0
-      ? totalFasts / (totalFasts + broken.length)
-      : 0;
+  const longestFastMs = completed.reduce(
+    (max, f) => Math.max(max, f.actualDuration ?? 0),
+    0
+  );
+  const longestFastHours = longestFastMs / 3_600_000;
 
   // Streaks based on calendar days with a completed fast
   const completedDays = new Set(
@@ -87,7 +87,7 @@ export function computeStats(fasts: FastSession[]): Stats {
     totalFasts,
     totalHoursFasted,
     averageFastHours,
-    completionRate,
+    longestFastHours,
     thisWeekFasts,
     thisWeekHours,
   };

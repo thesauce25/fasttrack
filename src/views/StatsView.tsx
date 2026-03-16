@@ -40,7 +40,7 @@ export function StatsView() {
           { label: "Total Fasts", value: stats.totalFasts.toString(), color: "var(--fast-accent)" },
           { label: "Hours Fasted", value: stats.totalHoursFasted.toFixed(1), color: "var(--success)" },
           { label: "Avg Duration", value: `${stats.averageFastHours.toFixed(1)}h`, color: "var(--text-primary)" },
-          { label: "Completion Rate", value: `${Math.round(stats.completionRate * 100)}%`, color: stats.completionRate >= 0.8 ? "var(--success)" : "var(--warning)" },
+          { label: "Longest Fast", value: `${stats.longestFastHours.toFixed(1)}h`, color: "var(--warning)" },
         ].map((item, i, arr) => (
           <div
             key={item.label}
