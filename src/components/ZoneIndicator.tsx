@@ -1,7 +1,9 @@
+import { useState, useEffect } from "react";
 import type { MetabolicZone } from "../types";
 import { formatDuration, getNextZone, getTimeToNextZone, METABOLIC_ZONES } from "../lib/fasting";
+import { getZoneScience, getTipForHour } from "../lib/scienceContent";
 import { ZoneIcon } from "./ZoneIcon";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Lightbulb, Brain, ArrowRight } from "lucide-react";
 
 interface ZoneIndicatorProps {
   zone: MetabolicZone;
@@ -13,10 +15,25 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
   const nextZone = getNextZone(elapsedMs);
   const timeToNext = getTimeToNextZone(elapsedMs);
   const timeToNextFmt = timeToNext ? formatDuration(timeToNext) : null;
+  const science = getZoneScience(zone.id);
+  const tip = getTipForHour(elapsedMs);
+
+  // Rotate through facts every 30 seconds
+  const [factIndex, setFactIndex] = useState(0);
+  useEffect(() => {
+    if (!science) return;
+    const id = setInterval(() => {
+      setFactIndex((i) => (i + 1) % science.facts.length);
+    }, 30_000);
+    return () => clearInterval(id);
+  }, [science]);
+
+  // Reset fact index when zone changes
+  useEffect(() => { setFactIndex(0); }, [zone.id]);
 
   return (
-    <div className="w-full px-5 mt-4">
-      {/* Current zone */}
+    <div className="w-full px-5 mt-4 flex flex-col" style={{ gap: "var(--card-gap)" }}>
+      {/* Current zone header */}
       <div className="card p-4">
         <div className="flex items-center gap-2.5 mb-3">
           <div
@@ -46,18 +63,65 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
           />
         </div>
 
-        <p className="text-[14px] leading-[1.5]" style={{ color: "var(--text-primary)" }}>
-          {zone.detail}
-        </p>
+        {/* What's happening */}
+        {science && (
+          <p className="text-[14px] leading-[1.5]" style={{ color: "var(--text-primary)" }}>
+            {science.whatsHappening}
+          </p>
+        )}
+      </div>
 
-        <p className="text-[13px] mt-2.5" style={{ color: "var(--text-secondary)" }}>
-          {zone.encouragement}
-        </p>
+      {/* Rotating science fact */}
+      {science && (
+        <div className="card px-4 py-3">
+          <div className="flex items-start gap-2.5">
+            <Brain size={15} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: zone.color }} />
+            <div>
+              <p className="text-[13px] leading-[1.45]" style={{ color: "var(--text-primary)" }}>
+                {science.facts[factIndex]}
+              </p>
+              {/* Dot indicators */}
+              <div className="flex gap-1 mt-2">
+                {science.facts.map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1 h-1 rounded-full transition-all duration-300"
+                    style={{
+                      background: i === factIndex ? zone.color : "var(--fill-tertiary)",
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Keep going motivation */}
+      {science && (
+        <div className="card px-4 py-3">
+          <div className="flex items-start gap-2.5">
+            <ArrowRight size={15} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: "var(--success)" }} />
+            <p className="text-[13px] leading-[1.45]" style={{ color: "var(--text-secondary)" }}>
+              {science.keepGoingReward}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Hourly tip */}
+      <div className="card px-4 py-3">
+        <div className="flex items-start gap-2.5">
+          <Lightbulb size={15} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: "var(--warning)" }} />
+          <p className="text-[13px] leading-[1.45]" style={{ color: "var(--text-secondary)" }}>
+            {tip.tip}
+          </p>
+        </div>
       </div>
 
       {/* Next zone teaser */}
       {nextZone && timeToNextFmt && (
-        <div className="card mt-2 px-4 py-3 flex items-center gap-3">
+        <div className="card px-4 py-3 flex items-center gap-3">
           <div
             className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
             style={{ background: `${nextZone.color}15` }}
@@ -77,7 +141,7 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
       )}
 
       {/* Zone timeline */}
-      <div className="flex gap-1 mt-3 px-1">
+      <div className="flex gap-1 px-1">
         {METABOLIC_ZONES.map((z) => {
           const isActive = z.id === zone.id;
           const isPast = z.endHour <= zone.startHour;
