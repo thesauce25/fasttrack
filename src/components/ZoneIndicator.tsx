@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import type { MetabolicZone } from "../types";
-import { formatDuration, getNextZone, getTimeToNextZone, METABOLIC_ZONES } from "../lib/fasting";
+import { formatDuration, getNextZone, METABOLIC_ZONES } from "../lib/fasting";
 import { getZoneScience, getTipForHour } from "../lib/scienceContent";
 import { ZoneIcon } from "./ZoneIcon";
 import { Lightbulb, ArrowRight } from "lucide-react";
@@ -21,10 +21,12 @@ interface ScienceCard {
 
 export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorProps) {
   const nextZone = getNextZone(elapsedMs);
-  const timeToNext = getTimeToNextZone(elapsedMs);
-  const timeToNextFmt = timeToNext ? formatDuration(timeToNext) : null;
   const science = getZoneScience(zone.id);
   const tip = getTipForHour(elapsedMs);
+
+  // All zones the user hasn't reached yet
+  const currentIdx = METABOLIC_ZONES.findIndex((z) => z.id === zone.id);
+  const upcomingZones = METABOLIC_ZONES.slice(currentIdx + 1);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeCard, setActiveCard] = useState(0);
@@ -41,11 +43,11 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
     setActiveCard(Math.round(el.scrollLeft / cardWidth));
   };
 
-  // Build cards — each with ONE focused idea, leading with the compelling stat
+  // Build cards — max 4, each with ONE focused idea
   const cards: ScienceCard[] = [];
 
   if (science) {
-    // Card 1: What's happening — the headline
+    // Card 1: What's happening right now
     cards.push({
       label: zone.name,
       labelColor: zone.color,
@@ -54,39 +56,26 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
       body: science.whatsHappening,
     });
 
-    // Cards 2+: Individual facts — each leads with the number
-    science.facts.forEach((fact) => {
-      // Extract the first number/stat as the headline
-      const match = fact.match(/^(.+?(?:\d[\d–.,%%x]+\S*))/);
-      const headline = match ? match[1] : fact.slice(0, 50);
-      const body = match ? fact.slice(headline.length).trim().replace(/^[—–,.\s]+/, "") : "";
-
-      cards.push({
-        label: "Science",
-        labelColor: zone.color,
-        headline,
-        body: body.charAt(0).toUpperCase() + body.slice(1),
-      });
+    // Card 2: The most compelling science fact (pick the first — it's the strongest)
+    const topFact = science.facts[0];
+    const match = topFact.match(/^(.+?(?:\d[\d–.,%%x]+\S*))/);
+    cards.push({
+      label: "The science",
+      labelColor: zone.color,
+      headline: match ? match[1] : topFact.slice(0, 60),
+      body: match ? topFact.slice(match[1].length).trim().replace(/^[—–,.\s]+/, "") : "",
     });
 
-    // Did you know
+    // Card 3: Did you know
     cards.push({
       label: "Did you know",
       labelColor: "var(--teal)",
       headline: science.didYouKnow.split(".")[0] + ".",
       body: science.didYouKnow.split(".").slice(1).join(".").trim(),
     });
-
-    // Keep going
-    cards.push({
-      label: "Keep going",
-      labelColor: "var(--success)",
-      headline: "",
-      body: science.keepGoingReward,
-    });
   }
 
-  // Tip
+  // Card 4: Practical tip
   cards.push({
     label: "Tip",
     labelColor: "var(--warning)",
@@ -164,10 +153,7 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
               >
                 {card.label}
               </span>
-              {/* Card position */}
-              <span className="text-[11px] ml-auto" style={{ color: "var(--text-quaternary)" }}>
-                {i + 1}/{cards.length}
-              </span>
+              <span className="flex-1" />
             </div>
 
             {/* Headline — the hook */}
@@ -203,27 +189,62 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
         ))}
       </div>
 
-      {/* Next zone */}
-      {nextZone && timeToNextFmt && (
-        <div className="px-5 mt-3">
-          <div className="card px-4 py-3 flex items-center gap-3">
-            <div
-              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: `${nextZone.color}15` }}
-            >
-              <ZoneIcon zoneId={nextZone.id} color={nextZone.color} size={13} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-medium">Next: {nextZone.name}</div>
-              <div className="text-[11px]" style={{ color: "var(--text-muted)" }}>
-                {nextZone.status}
-              </div>
-            </div>
-            <div className="text-[17px] font-light timer-digits" style={{ color: "var(--text-secondary)" }}>
-              {timeToNextFmt.hours}:{timeToNextFmt.minutes}
-            </div>
+      {/* Upcoming zones — swipeable */}
+      {upcomingZones.length > 0 && (
+        <>
+          <div className="px-5 mt-3 mb-2">
+            <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+              style={{ color: "var(--text-muted)" }}>
+              Coming up
+            </span>
           </div>
-        </div>
+          <div
+            className="flex overflow-x-auto"
+            style={{
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+              scrollbarWidth: "none",
+              paddingLeft: "20px",
+              paddingRight: "20px",
+              gap: "8px",
+            }}
+          >
+            {upcomingZones.map((uz) => {
+              const msUntil = uz.startHour * 3_600_000 - elapsedMs;
+              const until = formatDuration(Math.max(0, msUntil));
+              const isNext = nextZone?.id === uz.id;
+              return (
+                <div
+                  key={uz.id}
+                  className="card p-3.5 shrink-0"
+                  style={{
+                    scrollSnapAlign: "start",
+                    width: "200px",
+                    borderLeft: `3px solid ${uz.color}`,
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <ZoneIcon zoneId={uz.id} color={uz.color} size={14} />
+                    <span className="text-[13px] font-semibold" style={{ color: uz.color }}>
+                      {uz.name}
+                    </span>
+                  </div>
+                  <div className="text-[11px] mb-1.5" style={{ color: "var(--text-secondary)" }}>
+                    {uz.status}
+                  </div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-[20px] font-light timer-digits" style={{ color: isNext ? uz.color : "var(--text-primary)" }}>
+                      {until.hours}:{until.minutes}
+                    </span>
+                    <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+                      until {uz.startHour}h mark
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {/* Zone timeline */}
