@@ -189,6 +189,13 @@ export const useStore = create<AppState>()(
           logs: state.logs,
           milestones: state.milestones,
         }) as unknown as AppState,
+      onRehydrateStorage: () => {
+        return (state) => {
+          if (state) {
+            state._recomputeStats();
+          }
+        };
+      },
     }
   )
 );
