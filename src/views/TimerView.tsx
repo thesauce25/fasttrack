@@ -219,7 +219,7 @@ function IdleState() {
             color: "white",
           }}
         >
-          Start Fasting
+          Begin Fasting
         </button>
 
         {/* Progress stats */}
