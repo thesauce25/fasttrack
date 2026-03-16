@@ -3,16 +3,14 @@ import { useStore } from "../store";
 import { useTimerDisplay } from "../hooks/useTimerDisplay";
 import { CircularProgress } from "../components/CircularProgress";
 import { ZoneIndicator } from "../components/ZoneIndicator";
+import { WeekRing } from "../components/WeekRing";
 import {
   formatDuration,
   getCurrentZone,
   getZoneProgress,
 } from "../lib/fasting";
-import { getShuffledFacts } from "../lib/scienceContent";
 import type { FastSession } from "../types";
-import { Flame, Clock, Activity } from "lucide-react";
-import { ZoneIcon } from "../components/ZoneIcon";
-import { getBodyStatus, getEatingWindowTip } from "../lib/bodyStatus";
+import { Clock } from "lucide-react";
 
 // ── Active Fasting Screen ──
 
@@ -119,37 +117,30 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
   );
 }
 
-// ── Idle Home Screen ──
+// ── Idle Home Screen — 3 elements: Week Ring, one line, CTA ──
 
-function getGreeting(): string {
-  const h = new Date().getHours();
-  if (h >= 5 && h < 12) return "Good morning";
-  if (h >= 12 && h < 17) return "Good afternoon";
-  if (h >= 17 && h < 22) return "Good evening";
-  return "Hey";
-}
-
-function getSubtitle(stats: ReturnType<typeof useStore.getState>["stats"], lastFast: FastSession | null): string {
-  if (!lastFast) return "Your first fast is waiting. One tap to begin.";
+function getContextLine(stats: ReturnType<typeof useStore.getState>["stats"], lastFast: FastSession | null, thisWeekCount: number): string {
+  if (!lastFast) return "Tap below to start your first fast";
 
   const hoursSinceLast = (Date.now() - (lastFast.endTime ?? Date.now())) / 3_600_000;
-  const lastDurationH = (lastFast.actualDuration ?? 0) / 3_600_000;
 
-  // Streak milestones
-  if (stats.currentStreak === 7) return "One full week. This is becoming a pattern.";
-  if (stats.currentStreak === 14) return "Two weeks straight. This is who you are now.";
-  if (stats.currentStreak === 30) return "30 days. Fasting isn't something you do. It's something you are.";
+  // Streak milestones — identity messages
+  if (stats.currentStreak === 7) return "One full week. This is a pattern.";
+  if (stats.currentStreak === 14) return "Two weeks. This is who you are now.";
+  if (stats.currentStreak === 30) return "30 days. This is who you are.";
+  if (stats.currentStreak === 60) return "60 days. Most people never get here.";
 
-  // Recent fast
-  if (hoursSinceLast < 24) {
-    if (lastDurationH >= 16) return "Your body is still running on ketones from your last fast.";
-    if (lastDurationH >= 12) return "Your last fast flipped the metabolic switch. Your cells are still repairing.";
-    return "Every fast counts. Your last one moved the needle.";
-  }
+  // Already fasted today
+  if (hoursSinceLast < 12) return "Done for today. Rest well.";
 
-  if (hoursSinceLast < 72) return `It's been ${Math.floor(hoursSinceLast / 24)} day${Math.floor(hoursSinceLast / 24) > 1 ? "s" : ""} since your last fast. Your body is ready when you are.`;
+  // This week progress
+  if (thisWeekCount > 0 && thisWeekCount < 7) return `${thisWeekCount} of 7 this week`;
 
-  return `Your ${stats.totalFasts} fast${stats.totalFasts !== 1 ? "s" : ""} are still here. Pick up where you left off.`;
+  // Lapsed
+  if (hoursSinceLast > 72) return "Pick up where you left off";
+
+  // Default
+  return "Your body is ready when you are";
 }
 
 function IdleState() {
@@ -158,32 +149,17 @@ function IdleState() {
   const fasts = useStore((s) => s.fasts);
 
   const lastFast = fasts.find((f) => f.status === "completed") ?? null;
-  const greeting = getGreeting();
-  const subtitle = getSubtitle(stats, lastFast);
 
-  // Post-fast body status
-  const hoursSinceEnd = lastFast?.endTime ? (Date.now() - lastFast.endTime) / 3_600_000 : 999;
-  const lastDurationH = (lastFast?.actualDuration ?? 0) / 3_600_000;
-  const bodyStatusCards = getBodyStatus(hoursSinceEnd, lastDurationH);
-  const eatingTip = getEatingWindowTip(hoursSinceEnd);
-
-  // Random science teaser
-  const teaser = useMemo(() => {
-    const facts = getShuffledFacts("metabolic-switch", 1);
-    return facts[0] ?? "Fasting for 12+ hours activates autophagy — your cells start recycling damaged proteins.";
-  }, []);
-
-  // This week dots
+  // This week computation
   const today = new Date();
-  const dayOfWeek = today.getDay(); // 0=Sun
-  const weekDays = ["M", "T", "W", "T", "F", "S", "S"];
+  const dayOfWeek = today.getDay();
+  const todayIdx = (dayOfWeek + 6) % 7;
   const thisWeekFasted = useMemo(() => {
     const result = new Set<number>();
-    const mondayOffset = ((dayOfWeek + 6) % 7);
+    const mondayOffset = (dayOfWeek + 6) % 7;
     const monday = new Date(today);
     monday.setDate(today.getDate() - mondayOffset);
     monday.setHours(0, 0, 0, 0);
-
     fasts.filter((f) => f.status === "completed").forEach((f) => {
       const d = new Date(f.startTime);
       const diff = Math.floor((d.getTime() - monday.getTime()) / 86_400_000);
@@ -192,155 +168,34 @@ function IdleState() {
     return result;
   }, [fasts, dayOfWeek]);
 
-  const todayIdx = (dayOfWeek + 6) % 7; // Monday=0
+  const contextLine = getContextLine(stats, lastFast, thisWeekFasted.size);
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Scrollable content */}
-      <div className="flex-1 min-h-0 scrollable">
-        <div className="px-5 pt-4 pb-4">
-          {/* Hero greeting */}
-          <div className="flex items-start justify-between mb-1">
-            <h1 className="text-[28px] font-bold" style={{ letterSpacing: "-0.01em" }}>
-              {greeting}
-            </h1>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full mt-1"
-              style={{ background: "var(--fill-tertiary)" }}>
-              <Flame size={13} strokeWidth={1.5}
-                style={{ color: stats.currentStreak > 0 ? "var(--warning)" : "var(--text-quaternary)" }} />
-              <span className="text-[13px] font-semibold timer-digits"
-                style={{ color: stats.currentStreak > 0 ? "var(--warning)" : "var(--text-quaternary)" }}>
-                {stats.currentStreak}
-              </span>
-            </div>
-          </div>
-          <p className="text-[17px] mb-5" style={{ color: "var(--text-secondary)" }}>
-            {subtitle}
-          </p>
+    <div className="flex flex-col h-full items-center">
+      {/* Spacer — pushes ring to visual center */}
+      <div className="flex-1" />
 
-          {/* Post-fast body status */}
-          {bodyStatusCards.length > 0 && (
-            <>
-              <div className="flex items-center gap-2 mb-2">
-                <Activity size={13} strokeWidth={1.5} style={{ color: "var(--success)" }} />
-                <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
-                  style={{ color: "var(--text-muted)" }}>Your body right now</span>
-              </div>
-              <div className="card overflow-hidden mb-4">
-                {bodyStatusCards.map((card, i) => (
-                  <div key={i} className="px-4 py-3"
-                    style={{ borderBottom: i < bodyStatusCards.length - 1 ? "0.33px solid var(--separator)" : "none" }}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: card.active ? card.color : "var(--text-quaternary)" }} />
-                      <span className="text-[13px] font-medium"
-                        style={{ color: card.active ? card.color : "var(--text-secondary)" }}>
-                        {card.title}
-                      </span>
-                    </div>
-                    <p className="text-[17px] leading-[1.5] pl-[14px]"
-                      style={{ color: "var(--text-secondary)" }}>
-                      {card.detail}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              {eatingTip && (
-                <div className="card px-4 py-3 mb-4">
-                  <p className="text-[17px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
-                    {eatingTip}
-                  </p>
-                </div>
-              )}
-            </>
-          )}
+      {/* Element 1: Week Ring */}
+      <WeekRing
+        fastedDays={thisWeekFasted}
+        todayIdx={todayIdx}
+        streak={stats.currentStreak}
+        size={260}
+      />
 
-          {/* Progress stats */}
-        {stats.totalFasts > 0 && (
-          <>
-            <div className="card overflow-hidden mb-2">
-              <div className="grid grid-cols-2">
-                <StatCell label="Total Hours" value={Math.round(stats.totalHoursFasted).toString()} color="var(--success)" border="right" />
-                <StatCell label="Fasting Days" value={stats.fastingDays.toString()} color="var(--fast-accent)" />
-              </div>
-              <div style={{ borderTop: "0.33px solid var(--separator)" }} />
-              <div className="grid grid-cols-2">
-                <StatCell label="Longest" value={`${stats.longestFastHours.toFixed(1)}h`} color="var(--warning)" border="right" />
-                <StatCell label="Avg Duration" value={`${stats.averageFastHours.toFixed(1)}h`} color="var(--text-primary)" />
-              </div>
-            </div>
+      {/* Element 2: One contextual line */}
+      <p className="text-[15px] mt-4 text-center px-8" style={{ color: "var(--text-secondary)" }}>
+        {contextLine}
+      </p>
 
-            {/* This week */}
-            <div className="card px-4 py-3 mb-2 flex items-center">
-              <div className="flex gap-2.5 flex-1">
-                {weekDays.map((day, i) => {
-                  const fasted = thisWeekFasted.has(i);
-                  const isToday = i === todayIdx;
-                  return (
-                    <div key={i} className="flex flex-col items-center gap-1">
-                      <div className="w-2 h-2 rounded-full"
-                        style={{
-                          background: fasted ? "var(--fast-accent)" : "var(--fill-tertiary)",
-                          boxShadow: isToday && !fasted ? "0 0 0 1px var(--fast-accent)" : "none",
-                        }} />
-                      <span className="text-[11px]" style={{ color: isToday ? "var(--text-primary)" : "var(--text-quaternary)" }}>
-                        {day}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-              <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
-                {thisWeekFasted.size} of 7
-              </span>
-            </div>
-          </>
-        )}
+      {/* Spacer */}
+      <div className="flex-1" />
 
-        {/* Last fast */}
-        {lastFast && (
-          <div className="card p-4 mb-2">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
-                style={{ color: "var(--text-muted)" }}>Last Fast</span>
-              <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
-                {formatTimeSince(lastFast.endTime ?? Date.now())}
-              </span>
-            </div>
-            <div className="text-[28px] font-extralight timer-digits mb-1">
-              {formatHoursMinutes(lastFast.actualDuration ?? 0)}
-            </div>
-            {lastFast.actualDuration && (
-              <div className="flex items-center gap-2">
-                <ZoneIcon
-                  zoneId={getCurrentZone(lastFast.actualDuration).id}
-                  color={getCurrentZone(lastFast.actualDuration).color}
-                  size={13}
-                />
-                <span className="text-[13px]" style={{ color: getCurrentZone(lastFast.actualDuration).color }}>
-                  Reached {getCurrentZone(lastFast.actualDuration).name}
-                </span>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Science teaser */}
-        <div className="card px-4 py-3">
-          <span className="text-[13px] font-medium uppercase tracking-[0.04em] block mb-1.5"
-            style={{ color: "var(--text-muted)" }}>Did you know</span>
-          <p className="text-[13px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
-            {teaser}
-          </p>
-        </div>
-        </div>
-      </div>
-
-      {/* Fixed CTA — bottom thumb zone */}
-      <div className="shrink-0 px-5 pt-3 pb-3">
+      {/* Element 3: Begin Fasting — fixed in thumb zone */}
+      <div className="shrink-0 w-full px-5 pb-3">
         <button
           onClick={() => startFast()}
-          className="w-full h-[56px] text-[17px] font-semibold transition-all duration-150 active:scale-[0.97] active:opacity-90"
+          className="w-full h-[56px] text-[17px] font-semibold interactive"
           style={{
             borderRadius: "var(--radius-btn)",
             background: "var(--fast-accent)",
@@ -352,32 +207,6 @@ function IdleState() {
       </div>
     </div>
   );
-}
-
-function StatCell({ label, value, color, border }: { label: string; value: string; color: string; border?: "right" }) {
-  return (
-    <div className="py-3 px-4 text-center"
-      style={{ borderRight: border === "right" ? "0.33px solid var(--separator)" : "none" }}>
-      <div className="text-[13px] uppercase tracking-[0.04em] mb-0.5"
-        style={{ color: "var(--text-muted)" }}>{label}</div>
-      <div className="text-[28px] font-extralight timer-digits" style={{ color }}>{value}</div>
-    </div>
-  );
-}
-
-function formatTimeSince(ts: number): string {
-  const h = (Date.now() - ts) / 3_600_000;
-  if (h < 1) return "Just now";
-  if (h < 24) return `${Math.floor(h)}h ago`;
-  const d = Math.floor(h / 24);
-  if (d === 1) return "Yesterday";
-  return `${d} days ago`;
-}
-
-function formatHoursMinutes(ms: number): string {
-  const h = Math.floor(ms / 3_600_000);
-  const m = Math.floor((ms % 3_600_000) / 60_000);
-  return `${h}h ${m}m`;
 }
 
 // ── Router ──

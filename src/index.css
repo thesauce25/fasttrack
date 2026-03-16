@@ -154,6 +154,12 @@ html, body {
   transition: transform 0.06s ease-out;
 }
 
+/* ── Animations ── */
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.55; }
+}
+
 /* ── View container ── */
 .view {
   padding: 8px var(--screen-padding) 8px;
