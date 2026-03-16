@@ -111,7 +111,7 @@ function Step({ num, children }: { num: number; children: React.ReactNode }) {
       >
         {num}
       </div>
-      <p className="text-[15px] leading-[1.5] pt-0.5" style={{ color: "var(--text-primary)" }}>
+      <p className="text-[17px] leading-[1.5] pt-0.5" style={{ color: "var(--text-primary)" }}>
         {children}
       </p>
     </div>

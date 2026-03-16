@@ -44,17 +44,17 @@ export function SettingsView() {
 
         <div className="card p-4 mb-4">
           <h2 className="text-[15px] font-semibold mb-2">Medical Disclaimer</h2>
-          <p className="text-[13px] leading-[1.55]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
             FastTrack is an informational and tracking tool only. It is not a medical device and does not provide medical advice, diagnosis, or treatment. The content displayed in this app, including metabolic zone descriptions, science facts, and body status updates, is provided for educational purposes only and should not be construed as professional medical advice.
           </p>
-          <p className="text-[13px] leading-[1.55] mt-3" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[15px] leading-[1.5] mt-3" style={{ color: "var(--text-secondary)" }}>
             Always consult your physician or qualified healthcare provider before beginning any fasting regimen, especially if you are pregnant, nursing, diabetic, taking medication, or have any medical condition. Fasting may not be appropriate for everyone. If you experience dizziness, fainting, persistent nausea, or other concerning symptoms while fasting, stop immediately and seek medical attention.
           </p>
         </div>
 
         <div className="card p-4 mb-4">
           <h2 className="text-[15px] font-semibold mb-2">Information Accuracy</h2>
-          <p className="text-[13px] leading-[1.55]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
             All scientific content in this app is provided "as is" without warranty of any kind, express or implied. While we have made reasonable efforts to ensure accuracy by referencing peer-reviewed research, metabolic timelines and biological responses vary significantly between individuals based on age, sex, body composition, metabolic health, activity level, and other factors. The times and percentages shown (e.g., "ketosis begins at 12-16 hours") represent general population averages and may not reflect your individual experience.
           </p>
         </div>
@@ -88,14 +88,14 @@ export function SettingsView() {
 
         <div className="card p-4 mb-4">
           <h2 className="text-[15px] font-semibold mb-2">Data & Privacy</h2>
-          <p className="text-[13px] leading-[1.55]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
             All data is stored locally on your device using browser localStorage. No personal data, fasting records, or usage information is transmitted to any server, third party, or cloud service. You may export or delete your data at any time from this Settings page.
           </p>
         </div>
 
         <div className="card p-4 mb-4">
           <h2 className="text-[15px] font-semibold mb-2">Limitation of Liability</h2>
-          <p className="text-[13px] leading-[1.55]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
             In no event shall FastTrack or its developers be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of this app or reliance on any information provided herein. Use of this app is at your own risk.
           </p>
         </div>

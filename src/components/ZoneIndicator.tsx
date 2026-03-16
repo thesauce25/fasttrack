@@ -127,7 +127,7 @@ export function ZoneIndicator({ zone, elapsedMs }: ZoneIndicatorProps) {
                 {card.headline}
               </p>
             )}
-            <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-[17px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
               {card.body}
             </p>
           </div>

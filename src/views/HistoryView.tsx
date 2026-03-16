@@ -29,7 +29,7 @@ export function HistoryView() {
       {fasts.length === 0 && (
         <div className="flex flex-col items-center justify-center mt-20">
           <Moon size={40} strokeWidth={1} className="mb-3" style={{ color: "var(--text-quaternary)" }} />
-          <p className="text-[15px]" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[17px]" style={{ color: "var(--text-secondary)" }}>
             No fasts yet. Start your first one!
           </p>
         </div>

@@ -214,7 +214,7 @@ function IdleState() {
               </span>
             </div>
           </div>
-          <p className="text-[15px] mb-5" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-[17px] mb-5" style={{ color: "var(--text-secondary)" }}>
             {subtitle}
           </p>
 
@@ -238,7 +238,7 @@ function IdleState() {
                         {card.title}
                       </span>
                     </div>
-                    <p className="text-[15px] leading-[1.5] pl-[14px]"
+                    <p className="text-[17px] leading-[1.5] pl-[14px]"
                       style={{ color: "var(--text-secondary)" }}>
                       {card.detail}
                     </p>
@@ -247,7 +247,7 @@ function IdleState() {
               </div>
               {eatingTip && (
                 <div className="card px-4 py-3 mb-4">
-                  <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
+                  <p className="text-[17px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
                     {eatingTip}
                   </p>
                 </div>
