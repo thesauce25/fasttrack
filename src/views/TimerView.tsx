@@ -10,8 +10,9 @@ import {
 } from "../lib/fasting";
 import { getShuffledFacts } from "../lib/scienceContent";
 import type { FastSession } from "../types";
-import { Flame, Clock } from "lucide-react";
+import { Flame, Clock, Activity } from "lucide-react";
 import { ZoneIcon } from "../components/ZoneIcon";
+import { getBodyStatus, getEatingWindowTip } from "../lib/bodyStatus";
 
 // ── Active Fasting Screen ──
 
@@ -160,6 +161,12 @@ function IdleState() {
   const greeting = getGreeting();
   const subtitle = getSubtitle(stats, lastFast);
 
+  // Post-fast body status
+  const hoursSinceEnd = lastFast?.endTime ? (Date.now() - lastFast.endTime) / 3_600_000 : 999;
+  const lastDurationH = (lastFast?.actualDuration ?? 0) / 3_600_000;
+  const bodyStatusCards = getBodyStatus(hoursSinceEnd, lastDurationH);
+  const eatingTip = getEatingWindowTip(hoursSinceEnd);
+
   // Random science teaser
   const teaser = useMemo(() => {
     const facts = getShuffledFacts("metabolic-switch", 1);
@@ -210,6 +217,43 @@ function IdleState() {
           <p className="text-[15px] mb-5" style={{ color: "var(--text-secondary)" }}>
             {subtitle}
           </p>
+
+          {/* Post-fast body status */}
+          {bodyStatusCards.length > 0 && (
+            <>
+              <div className="flex items-center gap-2 mb-2">
+                <Activity size={13} strokeWidth={1.5} style={{ color: "var(--success)" }} />
+                <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+                  style={{ color: "var(--text-muted)" }}>Your body right now</span>
+              </div>
+              <div className="card overflow-hidden mb-4">
+                {bodyStatusCards.map((card, i) => (
+                  <div key={i} className="px-4 py-3"
+                    style={{ borderBottom: i < bodyStatusCards.length - 1 ? "0.33px solid var(--separator)" : "none" }}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-1.5 h-1.5 rounded-full"
+                        style={{ background: card.active ? card.color : "var(--text-quaternary)" }} />
+                      <span className="text-[13px] font-medium"
+                        style={{ color: card.active ? card.color : "var(--text-secondary)" }}>
+                        {card.title}
+                      </span>
+                    </div>
+                    <p className="text-[12px] leading-[1.45] pl-[14px]"
+                      style={{ color: "var(--text-secondary)" }}>
+                      {card.detail}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              {eatingTip && (
+                <div className="card px-4 py-3 mb-4">
+                  <p className="text-[12px] leading-[1.45]" style={{ color: "var(--text-secondary)" }}>
+                    {eatingTip}
+                  </p>
+                </div>
+              )}
+            </>
+          )}
 
           {/* Progress stats */}
         {stats.totalFasts > 0 && (
