@@ -180,6 +180,7 @@ function IdleState() {
         fastedDays={thisWeekFasted}
         todayIdx={todayIdx}
         streak={stats.currentStreak}
+        totalHours={stats.totalHoursFasted}
         size={260}
       />
 
