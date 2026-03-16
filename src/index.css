@@ -95,17 +95,15 @@ html, body {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* ── Tab Bar (Apple style) ── */
+/* ── Tab Bar ── */
 .tab-bar {
   display: flex;
   align-items: center;
   justify-content: space-around;
   flex-shrink: 0;
   min-height: 49px;
-  background: rgba(22, 22, 22, 0.85);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-top: 0.33px solid rgba(255, 255, 255, 0.1);
+  background: #000000;
+  border-top: 0.33px solid var(--separator);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
