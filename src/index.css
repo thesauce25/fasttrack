@@ -129,6 +129,11 @@ html, body {
   border-radius: var(--radius-card);
 }
 
+/* ── Swipe carousel ── */
+.flex.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+
 /* ── View container ── */
 .view {
   padding: 8px var(--screen-padding) 8px;
