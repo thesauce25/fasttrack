@@ -116,18 +116,18 @@ export function ZoneIndicator({ zone, elapsedMs }: ZoneIndicatorProps) {
               ) : (
                 <ZoneIcon zoneId={zone.id} color={card.labelColor} size={12} />
               )}
-              <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+              <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
                 style={{ color: card.labelColor }}>
                 {card.label}
               </span>
             </div>
             {card.headline && (
-              <p className="text-[16px] font-semibold leading-[1.3] mb-1.5"
+              <p className="text-[17px] font-semibold leading-[1.3] mb-1.5"
                 style={{ color: card.headlineColor ?? "var(--text-primary)" }}>
                 {card.headline}
               </p>
             )}
-            <p className="text-[13px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
+            <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
               {card.body}
             </p>
           </div>
@@ -149,7 +149,7 @@ export function ZoneIndicator({ zone, elapsedMs }: ZoneIndicatorProps) {
 
       {/* ALL phases — scrollable horizontal, past + current + future */}
       <div className="px-5 mt-4 mb-2">
-        <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+        <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
           style={{ color: "var(--text-muted)" }}>
           All phases
         </span>
@@ -194,15 +194,15 @@ export function ZoneIndicator({ zone, elapsedMs }: ZoneIndicatorProps) {
                 <span className="text-[13px] font-semibold" style={{ color: z.color }}>
                   {z.name}
                 </span>
-                <span className="text-[11px] ml-auto" style={{ color: "var(--text-muted)" }}>
+                <span className="text-[13px] ml-auto" style={{ color: "var(--text-muted)" }}>
                   {z.startHour}–{z.endHour}h
                 </span>
               </div>
-              <div className="text-[11px] mb-2" style={{ color: "var(--text-secondary)" }}>
+              <div className="text-[13px] mb-2" style={{ color: "var(--text-secondary)" }}>
                 {z.status}
               </div>
               {isPast && (
-                <span className="text-[12px] font-medium" style={{ color: z.color }}>
+                <span className="text-[13px] font-medium" style={{ color: z.color }}>
                   Completed
                 </span>
               )}
@@ -211,7 +211,7 @@ export function ZoneIndicator({ zone, elapsedMs }: ZoneIndicatorProps) {
                   <span className="text-[18px] font-light timer-digits" style={{ color: z.color }}>
                     {inZone.hours !== "00" ? `${inZone.hours}:${inZone.minutes}` : `${inZone.minutes}:${inZone.seconds}`}
                   </span>
-                  <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+                  <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
                     in zone
                   </span>
                 </div>
@@ -221,7 +221,7 @@ export function ZoneIndicator({ zone, elapsedMs }: ZoneIndicatorProps) {
                   <span className="text-[18px] font-light timer-digits">
                     {until.hours}:{until.minutes}
                   </span>
-                  <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
+                  <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
                     away
                   </span>
                 </div>

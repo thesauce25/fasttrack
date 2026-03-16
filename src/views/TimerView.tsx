@@ -60,15 +60,15 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
               </div>
             )}
             <div className="flex items-center gap-1.5 mt-1">
-              <span className="text-[12px]" style={{ color: zone.color }}>
+              <span className="text-[13px]" style={{ color: zone.color }}>
                 {zoneElapsed.hours !== "00" ? `${zoneElapsed.hours}:${zoneElapsed.minutes}` : `${zoneElapsed.minutes}:${zoneElapsed.seconds}`}
               </span>
               <span className="text-[10px]" style={{ color: "var(--text-quaternary)" }}>/</span>
-              <span className="text-[12px]" style={{ color: "var(--text-muted)" }}>
+              <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
                 {zoneRemaining.hours !== "00" ? `${zoneRemaining.hours}:${zoneRemaining.minutes}` : `${zoneRemaining.minutes}:${zoneRemaining.seconds}`} left
               </span>
             </div>
-            <span className="text-[12px] font-medium mt-1" style={{ color: zone.color }}>{zone.name}</span>
+            <span className="text-[13px] font-medium mt-1" style={{ color: zone.color }}>{zone.name}</span>
           </div>
         </CircularProgress>
       </div>
@@ -223,7 +223,7 @@ function IdleState() {
             <>
               <div className="flex items-center gap-2 mb-2">
                 <Activity size={13} strokeWidth={1.5} style={{ color: "var(--success)" }} />
-                <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+                <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
                   style={{ color: "var(--text-muted)" }}>Your body right now</span>
               </div>
               <div className="card overflow-hidden mb-4">
@@ -238,7 +238,7 @@ function IdleState() {
                         {card.title}
                       </span>
                     </div>
-                    <p className="text-[12px] leading-[1.45] pl-[14px]"
+                    <p className="text-[15px] leading-[1.5] pl-[14px]"
                       style={{ color: "var(--text-secondary)" }}>
                       {card.detail}
                     </p>
@@ -247,7 +247,7 @@ function IdleState() {
               </div>
               {eatingTip && (
                 <div className="card px-4 py-3 mb-4">
-                  <p className="text-[12px] leading-[1.45]" style={{ color: "var(--text-secondary)" }}>
+                  <p className="text-[15px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
                     {eatingTip}
                   </p>
                 </div>
@@ -283,7 +283,7 @@ function IdleState() {
                           background: fasted ? "var(--fast-accent)" : "var(--fill-tertiary)",
                           boxShadow: isToday && !fasted ? "0 0 0 1px var(--fast-accent)" : "none",
                         }} />
-                      <span className="text-[9px]" style={{ color: isToday ? "var(--text-primary)" : "var(--text-quaternary)" }}>
+                      <span className="text-[11px]" style={{ color: isToday ? "var(--text-primary)" : "var(--text-quaternary)" }}>
                         {day}
                       </span>
                     </div>
@@ -301,7 +301,7 @@ function IdleState() {
         {lastFast && (
           <div className="card p-4 mb-2">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+              <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
                 style={{ color: "var(--text-muted)" }}>Last Fast</span>
               <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
                 {formatTimeSince(lastFast.endTime ?? Date.now())}
@@ -327,7 +327,7 @@ function IdleState() {
 
         {/* Science teaser */}
         <div className="card px-4 py-3">
-          <span className="text-[11px] font-medium uppercase tracking-[0.04em] block mb-1.5"
+          <span className="text-[13px] font-medium uppercase tracking-[0.04em] block mb-1.5"
             style={{ color: "var(--text-muted)" }}>Did you know</span>
           <p className="text-[13px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
             {teaser}
@@ -358,7 +358,7 @@ function StatCell({ label, value, color, border }: { label: string; value: strin
   return (
     <div className="py-3 px-4 text-center"
       style={{ borderRight: border === "right" ? "0.33px solid var(--separator)" : "none" }}>
-      <div className="text-[11px] uppercase tracking-[0.04em] mb-0.5"
+      <div className="text-[13px] uppercase tracking-[0.04em] mb-0.5"
         style={{ color: "var(--text-muted)" }}>{label}</div>
       <div className="text-[28px] font-extralight timer-digits" style={{ color }}>{value}</div>
     </div>

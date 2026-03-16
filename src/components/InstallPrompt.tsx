@@ -106,12 +106,12 @@ function Step({ num, children }: { num: number; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-3 text-left">
       <div
-        className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[12px] font-semibold"
+        className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[13px] font-semibold"
         style={{ background: "var(--accent)", color: "white" }}
       >
         {num}
       </div>
-      <p className="text-[14px] leading-[1.4] pt-0.5" style={{ color: "var(--text-primary)" }}>
+      <p className="text-[15px] leading-[1.5] pt-0.5" style={{ color: "var(--text-primary)" }}>
         {children}
       </p>
     </div>

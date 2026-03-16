@@ -76,10 +76,10 @@ export function SettingsView() {
               <p className="text-[13px] font-medium" style={{ color: "var(--text-primary)" }}>
                 {source.title}
               </p>
-              <p className="text-[12px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
+              <p className="text-[13px] mt-0.5" style={{ color: "var(--text-secondary)" }}>
                 {source.authors}
               </p>
-              <p className="text-[11px] mt-0.5 italic" style={{ color: "var(--text-muted)" }}>
+              <p className="text-[13px] mt-0.5 italic" style={{ color: "var(--text-muted)" }}>
                 {source.journal}
               </p>
             </div>
@@ -100,7 +100,7 @@ export function SettingsView() {
           </p>
         </div>
 
-        <p className="text-[11px] text-center px-4 mt-2 mb-8" style={{ color: "var(--text-quaternary)" }}>
+        <p className="text-[13px] text-center px-4 mt-2 mb-8" style={{ color: "var(--text-quaternary)" }}>
           Last updated March 2026
         </p>
       </div>
@@ -198,7 +198,7 @@ export function SettingsView() {
         </button>
       </div>
 
-      <p className="text-[11px] text-center px-4 mt-4 leading-[1.5]" style={{ color: "var(--text-quaternary)" }}>
+      <p className="text-[13px] text-center px-4 mt-4 leading-[1.5]" style={{ color: "var(--text-quaternary)" }}>
         Not medical advice. Consult your doctor before fasting.
         <br />All data stored on-device. Nothing leaves your phone.
       </p>

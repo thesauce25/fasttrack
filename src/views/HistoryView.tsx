@@ -73,7 +73,7 @@ export function HistoryView() {
                     return (
                       <div className="flex items-center gap-1.5 mt-1">
                         <ZoneIcon zoneId={z.id} color={z.color} size={11} />
-                        <span className="text-[11px]" style={{ color: z.color }}>
+                        <span className="text-[13px]" style={{ color: z.color }}>
                           Reached {z.name}
                         </span>
                       </div>
@@ -84,7 +84,7 @@ export function HistoryView() {
                   {confirmDelete === fast.id ? (
                     <button
                       onClick={() => { deleteFast(fast.id); setConfirmDelete(null); }}
-                      className="text-[12px] px-2 py-1 rounded-md active:scale-[0.97] transition-all duration-150"
+                      className="text-[13px] px-2 py-1 rounded-md active:scale-[0.97] transition-all duration-150"
                       style={{ background: "rgba(255, 69, 58, 0.12)", color: "var(--danger)" }}
                     >
                       Delete

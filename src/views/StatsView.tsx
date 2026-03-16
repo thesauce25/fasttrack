@@ -53,7 +53,7 @@ export function StatsView() {
       {(stats.ketosisHours > 0 || stats.autophagyHours > 0) && (
         <div className="card overflow-hidden mb-2">
           <div className="px-4 py-2.5" style={{ borderBottom: "0.33px solid var(--separator)" }}>
-            <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+            <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
               style={{ color: "var(--text-muted)" }}>Deep Fasting</span>
           </div>
           <div className="flex items-center justify-between px-4 py-3"
@@ -78,7 +78,7 @@ export function StatsView() {
       <div className="card overflow-hidden mb-2">
         <div className="px-4 py-2.5 flex items-center justify-between"
           style={{ borderBottom: "0.33px solid var(--separator)" }}>
-          <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
+          <span className="text-[13px] font-medium uppercase tracking-[0.04em]"
             style={{ color: "var(--text-muted)" }}>This Week</span>
           {weekTrend !== 0 && (
             <div className="flex items-center gap-1">
@@ -87,7 +87,7 @@ export function StatsView() {
               ) : (
                 <TrendingDown size={12} strokeWidth={1.5} style={{ color: "var(--text-muted)" }} />
               )}
-              <span className="text-[11px]"
+              <span className="text-[13px]"
                 style={{ color: weekTrend > 0 ? "var(--success)" : "var(--text-muted)" }}>
                 {weekTrend > 0 ? "+" : ""}{weekTrend} vs last week
               </span>
@@ -96,18 +96,18 @@ export function StatsView() {
           {weekTrend === 0 && stats.lastWeekFasts > 0 && (
             <div className="flex items-center gap-1">
               <Minus size={12} strokeWidth={1.5} style={{ color: "var(--text-muted)" }} />
-              <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>Same as last week</span>
+              <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>Same as last week</span>
             </div>
           )}
         </div>
         <div className="flex">
           <div className="flex-1 text-center py-3" style={{ borderRight: "0.33px solid var(--separator)" }}>
             <div className="text-[22px] font-light timer-digits">{stats.thisWeekFasts}</div>
-            <div className="text-[12px]" style={{ color: "var(--text-muted)" }}>Fasts</div>
+            <div className="text-[13px]" style={{ color: "var(--text-muted)" }}>Fasts</div>
           </div>
           <div className="flex-1 text-center py-3">
             <div className="text-[22px] font-light timer-digits">{stats.thisWeekHours.toFixed(1)}</div>
-            <div className="text-[12px]" style={{ color: "var(--text-muted)" }}>Hours</div>
+            <div className="text-[13px]" style={{ color: "var(--text-muted)" }}>Hours</div>
           </div>
         </div>
       </div>
