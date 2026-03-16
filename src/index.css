@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/* ── Safe Area ── */
+@supports (padding: env(safe-area-inset-top)) {
+  :root {
+    --sat: env(safe-area-inset-top);
+    --sab: env(safe-area-inset-bottom);
+  }
+}
+
+/* ── Design System ── */
+:root {
+  /* Background layers (Apple dark mode system + subtle tint) */
+  --bg-primary: #000000;
+  --bg-elevated: #1c1c1e;
+  --bg-card: #1c1c1e;
+  --bg-card-hover: #2c2c2e;
+
+  /* Text hierarchy (Apple's 4-level rgba system) */
+  --text-primary: rgba(255, 255, 255, 1.0);
+  --text-secondary: rgba(235, 235, 245, 0.6);
+  --text-muted: rgba(235, 235, 245, 0.3);
+  --text-quaternary: rgba(235, 235, 245, 0.18);
+
+  /* Accent */
+  --accent: #6c5ce7;
+  --accent-glow: #7c6cf7;
+
+  /* Semantic */
+  --success: #30d158;
+  --warning: #ff9f0a;
+  --danger: #ff453a;
+
+  /* Spacing (4px base grid) */
+  --screen-padding: 20px;
+  --card-padding: 16px;
+  --card-gap: 12px;
+  --section-gap: 24px;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-btn: 14px;
+
+  /* Borders */
+  --border-card: 0.5px solid rgba(255, 255, 255, 0.08);
+  --border-separator: 0.5px solid rgba(84, 84, 88, 0.6);
+}
+
+/* ── Reset ── */
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+input, textarea, select {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+/* ── Base ── */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.02em;
+}
+
+/* ── App Shell ── */
+.app-shell {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+}
+
+.app-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* ── Tab Bar ── */
+.tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-shrink: 0;
+  min-height: 49px;
+  background: rgba(0, 0, 0, 0.85);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Scrollable ── */
+@media (display-mode: standalone) {
+  html, body { overscroll-behavior: none; }
+}
+.scrollable {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* ── Typography ── */
+.timer-digits {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--bg-card);
+  border: var(--border-card);
+  border-radius: var(--radius-card);
+}
+
+/* ── View container ── */
+.view {
+  padding: 16px var(--screen-padding) 8px;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
