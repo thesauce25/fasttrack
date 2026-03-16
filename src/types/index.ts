@@ -6,9 +6,9 @@ export type FastStatus = (typeof FAST_STATUSES)[number];
 
 export interface FastSession {
   id: string;
-  startTime: number; // Unix ms — absolute timestamp
+  startTime: number;
   endTime: number | null;
-  targetDuration: number; // milliseconds
+  targetDuration: number;
   actualDuration: number | null;
   fastType: FastType;
   status: FastStatus;
@@ -18,7 +18,7 @@ export interface FastSession {
 export type Rating = 1 | 2 | 3 | 4 | 5;
 
 export interface DailyLog {
-  date: string; // "YYYY-MM-DD"
+  date: string;
   mood: Rating | null;
   energy: Rating | null;
   weight: number | null;
@@ -37,11 +37,16 @@ export interface Stats {
   currentStreak: number;
   longestStreak: number;
   totalFasts: number;
-  totalHoursFasted: number;
+  fastingDays: number;           // unique calendar days with a completed fast
+  totalHoursFasted: number;      // includes broken fasts — every hour counts
   averageFastHours: number;
   longestFastHours: number;
+  ketosisHours: number;          // hours past 12h mark (fat-burning zone)
+  autophagyHours: number;        // hours past 16h mark (deep repair zone)
   thisWeekFasts: number;
   thisWeekHours: number;
+  lastWeekFasts: number;
+  lastWeekHours: number;
 }
 
 export interface MetabolicZone {

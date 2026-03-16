@@ -217,7 +217,7 @@ function IdleState() {
             <div className="card overflow-hidden mb-2">
               <div className="grid grid-cols-2">
                 <StatCell label="Total Hours" value={Math.round(stats.totalHoursFasted).toString()} color="var(--success)" border="right" />
-                <StatCell label="Fasts" value={stats.totalFasts.toString()} color="var(--fast-accent)" />
+                <StatCell label="Fasting Days" value={stats.fastingDays.toString()} color="var(--fast-accent)" />
               </div>
               <div style={{ borderTop: "0.33px solid var(--separator)" }} />
               <div className="grid grid-cols-2">
