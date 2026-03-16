@@ -25,13 +25,10 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
   const zoneProg = getZoneProgress(elapsedMs, zone);
   const elapsed = formatDuration(elapsedMs);
   const totalHours = elapsedMs / 3_600_000;
-
-  // Show minutes:seconds when under 1 hour, hours:minutes when over
   const isUnderOneHour = totalHours < 1;
 
   return (
     <div className="flex flex-col items-center pt-4 pb-6 scrollable h-full">
-      {/* Timer Ring — tracks current ZONE progress */}
       <div className="mt-2 mb-1">
         <CircularProgress progress={zoneProg} color={zone.color} size={240}>
           <div className="flex flex-col items-center">
@@ -39,7 +36,7 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
               <>
                 <div
                   className="timer-digits font-extralight tracking-[0.02em]"
-                  style={{ fontSize: "56px", lineHeight: 1, color: "var(--text-primary)" }}
+                  style={{ fontSize: "56px", lineHeight: 1 }}
                 >
                   {elapsed.minutes}:{elapsed.seconds}
                 </div>
@@ -51,7 +48,7 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
               <>
                 <div
                   className="timer-digits font-extralight tracking-[0.02em]"
-                  style={{ fontSize: "56px", lineHeight: 1, color: "var(--text-primary)" }}
+                  style={{ fontSize: "56px", lineHeight: 1 }}
                 >
                   {elapsed.hours}:{elapsed.minutes}
                 </div>
@@ -63,26 +60,21 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
                 </span>
               </>
             )}
-            <span
-              className="text-[12px] font-medium mt-1.5"
-              style={{ color: zone.color }}
-            >
+            <span className="text-[12px] font-medium mt-1.5" style={{ color: zone.color }}>
               {zone.name}
             </span>
           </div>
         </CircularProgress>
       </div>
 
-      {/* Science zones */}
       <ZoneIndicator zone={zone} zoneProgress={zoneProg} elapsedMs={elapsedMs} />
 
-      {/* End button with confirmation */}
       <div className="px-5 mt-5 w-full">
         {confirmEnd ? (
           <div className="flex gap-3">
             <button
               onClick={() => endFast("completed")}
-              className="flex-1 h-[50px] text-[17px] font-semibold transition-all duration-150 active:scale-[0.97]"
+              className="flex-1 h-[44px] text-[17px] font-semibold transition-all duration-150 active:scale-[0.97]"
               style={{
                 borderRadius: "var(--radius-btn)",
                 background: "var(--danger)",
@@ -93,7 +85,7 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
             </button>
             <button
               onClick={() => setConfirmEnd(false)}
-              className="flex-1 h-[50px] text-[17px] font-semibold card transition-all duration-150 active:scale-[0.97]"
+              className="flex-1 h-[44px] text-[17px] font-semibold card transition-all duration-150 active:scale-[0.97]"
               style={{ color: "var(--text-secondary)" }}
             >
               Keep Going
@@ -102,13 +94,8 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
         ) : (
           <button
             onClick={() => setConfirmEnd(true)}
-            className="w-full h-[50px] text-[17px] font-semibold transition-all duration-150 active:scale-[0.97]"
-            style={{
-              borderRadius: "var(--radius-btn)",
-              background: "var(--bg-card)",
-              color: "var(--text-muted)",
-              border: "var(--border-card)",
-            }}
+            className="w-full h-[44px] text-[17px] font-regular card transition-all duration-150 active:scale-[0.97]"
+            style={{ color: "var(--text-secondary)" }}
           >
             End Fast
           </button>
@@ -127,28 +114,27 @@ function IdleState() {
     <div className="flex flex-col items-center justify-center h-full px-5">
       {stats.currentStreak > 0 && (
         <div
-          className="flex items-center gap-2 mb-8 px-4 py-2 rounded-full"
-          style={{ background: "rgba(255, 159, 10, 0.12)" }}
+          className="flex items-center gap-2 mb-8 px-3 py-1.5 rounded-full"
+          style={{ background: "var(--fill-tertiary)" }}
         >
-          <Flame size={16} strokeWidth={1.5} style={{ color: "var(--warning)" }} />
-          <span className="text-[13px] font-semibold" style={{ color: "var(--warning)" }}>
+          <Flame size={14} strokeWidth={1.5} style={{ color: "var(--warning)" }} />
+          <span className="text-[13px] font-medium" style={{ color: "var(--warning)" }}>
             {stats.currentStreak} day streak
           </span>
         </div>
       )}
 
-      {/* Tap to start — the ring IS the button */}
       <button
         onClick={() => startFast()}
         className="mb-6 transition-all duration-150 active:scale-[0.97] active:opacity-90"
         style={{ background: "none", border: "none" }}
       >
-        <CircularProgress progress={0} color="var(--accent)" size={220}>
+        <CircularProgress progress={0} color="var(--fast-accent)" size={220}>
           <div className="flex flex-col items-center">
-            <span className="text-[17px] font-semibold" style={{ color: "var(--accent)" }}>
+            <span className="text-[17px] font-semibold" style={{ color: "var(--fast-accent)" }}>
               Start
             </span>
-            <span className="text-[17px] font-semibold" style={{ color: "var(--accent)" }}>
+            <span className="text-[17px] font-semibold" style={{ color: "var(--fast-accent)" }}>
               Fasting
             </span>
           </div>
@@ -159,27 +145,31 @@ function IdleState() {
         {encouragement}
       </p>
 
-      {/* What happens when you fast */}
       <div className="mt-10 w-full">
         <p className="text-[11px] font-medium uppercase tracking-[0.06em] mb-3 text-center"
           style={{ color: "var(--text-muted)" }}>
           What happens when you fast
         </p>
-        <div className="flex flex-col gap-2.5">
+        <div className="card overflow-hidden">
           {[
             { time: "4h", label: "Glycogen depletion begins", color: "#4a9eff", Icon: BatteryLow },
             { time: "12h", label: "Metabolic switch flips", color: "#ff6348", Icon: Zap },
-            { time: "16h", label: "Ketosis & autophagy", color: "#6c5ce7", Icon: Sparkles },
+            { time: "16h", label: "Ketosis & autophagy", color: "#5e5ce6", Icon: Sparkles },
             { time: "24h", label: "Deep cellular repair", color: "#30d158", Icon: ShieldCheck },
-          ].map((item) => (
-            <div key={item.time} className="flex items-center gap-3">
-              <span className="text-[13px] font-medium timer-digits w-8 text-right"
-                style={{ color: item.color }}>
-                {item.time}
-              </span>
-              <item.Icon size={14} strokeWidth={1.5} style={{ color: item.color }} />
-              <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+          ].map((item, i, arr) => (
+            <div
+              key={item.time}
+              className="flex items-center gap-3 px-4 py-3"
+              style={{
+                borderBottom: i < arr.length - 1 ? "0.33px solid var(--separator)" : "none",
+              }}
+            >
+              <item.Icon size={16} strokeWidth={1.5} style={{ color: item.color }} />
+              <span className="text-[15px] flex-1" style={{ color: "var(--text-primary)" }}>
                 {item.label}
+              </span>
+              <span className="text-[13px] timer-digits" style={{ color: "var(--text-secondary)" }}>
+                {item.time}
               </span>
             </div>
           ))}

@@ -23,73 +23,81 @@ export function HistoryView() {
 
   return (
     <div className="view">
-      <h1 className="text-[22px] font-semibold mb-4">History</h1>
+      <h1 className="text-[34px] font-bold mb-4" style={{ letterSpacing: "-0.01em" }}>History</h1>
 
       {fasts.length === 0 && (
         <div className="flex flex-col items-center justify-center mt-20">
-          <Moon size={40} strokeWidth={1.5} className="mb-3" style={{ color: "var(--text-muted)" }} />
+          <Moon size={40} strokeWidth={1} className="mb-3" style={{ color: "var(--text-quaternary)" }} />
           <p className="text-[15px]" style={{ color: "var(--text-secondary)" }}>
             No fasts yet. Start your first one!
           </p>
         </div>
       )}
 
-      <div className="flex flex-col" style={{ gap: "var(--card-gap)" }}>
-        {fasts.map((fast) => (
-          <div key={fast.id} className="card p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                {fast.status === "completed" ? (
-                  <CheckCircle size={16} color="var(--success)" strokeWidth={1.5} />
-                ) : (
-                  <XCircle size={16} color="var(--danger)" strokeWidth={1.5} />
-                )}
-                <span className="text-[15px] font-medium">{fastTypeLabel(fast.fastType)}</span>
-              </div>
-              <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
-                {formatDate(fast.startTime)}
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
-                {formatTime(fast.startTime)} → {fast.endTime ? formatTime(fast.endTime) : "—"}
-              </span>
-              <div className="flex items-center gap-3">
-                <span
-                  className="text-[15px] font-semibold timer-digits"
-                  style={{ color: fast.status === "completed" ? "var(--success)" : "var(--text-secondary)" }}
-                >
-                  {fast.actualDuration ? formatHoursShort(fast.actualDuration) : "—"}
+      {fasts.length > 0 && (
+        <div className="card overflow-hidden">
+          {fasts.map((fast, i) => (
+            <div
+              key={fast.id}
+              className="px-4 py-3"
+              style={{
+                borderBottom: i < fasts.length - 1 ? "0.33px solid var(--separator)" : "none",
+              }}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
+                  {fast.status === "completed" ? (
+                    <CheckCircle size={15} color="var(--success)" strokeWidth={1.5} />
+                  ) : (
+                    <XCircle size={15} color="var(--danger)" strokeWidth={1.5} />
+                  )}
+                  <span className="text-[15px]">{fastTypeLabel(fast.fastType)}</span>
+                </div>
+                <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+                  {formatDate(fast.startTime)}
                 </span>
-                {confirmDelete === fast.id ? (
-                  <button
-                    onClick={() => { deleteFast(fast.id); setConfirmDelete(null); }}
-                    className="text-[12px] px-2 py-1 rounded-lg active:scale-[0.97] transition-all duration-150"
-                    style={{ background: "rgba(255, 69, 58, 0.15)", color: "var(--danger)" }}
-                  >
-                    Confirm
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setConfirmDelete(fast.id)}
-                    className="p-1 rounded-lg active:scale-[0.97] min-w-[44px] min-h-[44px] flex items-center justify-center"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    <Trash2 size={14} strokeWidth={1.5} />
-                  </button>
-                )}
               </div>
-            </div>
 
-            {fast.status === "broken" && (
-              <p className="text-[13px] mt-2 italic" style={{ color: "var(--text-muted)" }}>
-                Every fast counts, even short ones. You showed up.
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+              <div className="flex items-center justify-between pl-[23px]">
+                <span className="text-[13px]" style={{ color: "var(--text-muted)" }}>
+                  {formatTime(fast.startTime)} — {fast.endTime ? formatTime(fast.endTime) : "–"}
+                </span>
+                <div className="flex items-center gap-3">
+                  <span
+                    className="text-[15px] font-medium timer-digits"
+                    style={{ color: fast.status === "completed" ? "var(--success)" : "var(--text-secondary)" }}
+                  >
+                    {fast.actualDuration ? formatHoursShort(fast.actualDuration) : "–"}
+                  </span>
+                  {confirmDelete === fast.id ? (
+                    <button
+                      onClick={() => { deleteFast(fast.id); setConfirmDelete(null); }}
+                      className="text-[12px] px-2 py-1 rounded-md active:scale-[0.97] transition-all duration-150"
+                      style={{ background: "rgba(255, 69, 58, 0.12)", color: "var(--danger)" }}
+                    >
+                      Delete
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmDelete(fast.id)}
+                      className="p-1 min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-[0.97]"
+                      style={{ color: "var(--text-quaternary)" }}
+                    >
+                      <Trash2 size={14} strokeWidth={1.5} />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {fast.status === "broken" && (
+                <p className="text-[13px] mt-1 pl-[23px]" style={{ color: "var(--text-muted)" }}>
+                  Every fast counts, even short ones.
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

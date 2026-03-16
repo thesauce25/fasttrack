@@ -31,7 +31,7 @@ export function TabBar({ active, onChange }: TabBarProps) {
               border: "none",
             }}
           >
-            <Icon size={24} strokeWidth={isActive ? 2 : 1.5} />
+            <Icon size={22} strokeWidth={isActive ? 2 : 1.5} />
             <span className="text-[10px] font-medium">{label}</span>
           </button>
         );
