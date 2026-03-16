@@ -34,7 +34,7 @@ interface AppState {
 
   // Fast actions
   startFast: (type?: FastType, customMinutes?: number) => void;
-  endFast: (status: Extract<FastStatus, "completed" | "broken">) => void;
+  endFast: (status: Extract<FastStatus, "completed" | "broken">, customEndTime?: number) => void;
   deleteFast: (id: string) => void;
 
   // Log actions
@@ -87,16 +87,16 @@ export const useStore = create<AppState>()(
         set((state) => ({ fasts: [session, ...state.fasts] }));
       },
 
-      endFast: (status) => {
-        const now = Date.now();
+      endFast: (status, customEndTime) => {
+        const endTime = customEndTime ?? Date.now();
         set((state) => ({
           fasts: state.fasts.map((f) =>
             f.status === "active"
               ? {
                   ...f,
                   status,
-                  endTime: now,
-                  actualDuration: now - f.startTime,
+                  endTime,
+                  actualDuration: endTime - f.startTime,
                 }
               : f
           ),

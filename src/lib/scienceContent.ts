@@ -33,6 +33,10 @@ export const ZONE_SCIENCE: ZoneScienceContent[] = [
       "Your body burns 5–15% of the calories you just ate simply digesting them — protein costs the most at 20–30% of its calories.",
       "Blood glucose peaks around 60–90 minutes after a meal. Until it returns to baseline, fat burning is essentially shut off.",
       "Your stomach empties at roughly 1–2 kcal per minute. A 600-calorie meal takes about 4–5 hours to fully clear.",
+      "Insulin suppresses hormone-sensitive lipase, the enzyme that releases fat from fat cells. While insulin is elevated, your fat stores are locked.",
+      "Your parasympathetic nervous system is dominant right now — 'rest and digest' mode. Heart rate slows and blood flow shifts to your gut.",
+      "Gastric acid reaches pH 1.5–3.5 during digestion — acidic enough to dissolve metal. Your stomach lining replaces itself every 3–4 days to survive this.",
+      "After eating, your body temperature rises 0.5–1°C from the thermic effect of food. This extra heat IS calories being burned for digestion.",
     ],
     whatsHappening:
       "Your digestive system is working at full power right now. Stomach acid, bile, and pancreatic enzymes are breaking down food. Insulin is elevated — acting as a traffic controller, routing nutrients to every cell. This is the one phase where your body is building and storing, not burning.",
@@ -50,6 +54,10 @@ export const ZONE_SCIENCE: ZoneScienceContent[] = [
       "Insulin drops about 20–50% from its post-meal peak by hour 4. Lower insulin is the master signal that tells fat cells to release their contents.",
       "Glucagon — insulin's opposite — begins rising, instructing the liver to convert stored glycogen back into blood glucose to keep your brain fueled.",
       "Your body is burning about 60% glucose and 40% fat at this stage. That ratio is about to flip dramatically.",
+      "Your muscles store 300–500g of glycogen but can only use it locally — they can't export it to fuel your brain. Only liver glycogen maintains blood sugar.",
+      "Cortisol begins a gentle rise, mobilizing stored energy. This isn't stress — it's your body's natural fuel-seeking mechanism, fine-tuned over millennia.",
+      "Blood sugar stabilizes at 70–100 mg/dL during this phase. Your body is expert at maintaining this narrow range even without food — a sign of metabolic health.",
+      "Ghrelin (hunger hormone) peaks around your usual meal times then drops within 20 minutes — even without eating. Hunger is a wave, not a ramp.",
     ],
     whatsHappening:
       "A hormonal shift is beginning. Insulin is falling and glucagon is rising — this is your body reading the signal that no new food is coming. Your liver is methodically releasing its sugar reserves, like a battery being drained to make way for a more powerful fuel source: your stored fat.",
@@ -67,6 +75,10 @@ export const ZONE_SCIENCE: ZoneScienceContent[] = [
       "By hour 10, your body is deriving roughly 50–70% of its energy from fat oxidation, up from ~40% just hours ago.",
       "Insulin is now at its lowest daytime level — this is the single most important hormonal condition for fat mobilization. Fat cells cannot release their stores while insulin is elevated.",
       "Liver glycogen is about 50–75% depleted. Your body is increasingly turning to free fatty acids, and the machinery for ketone production is warming up.",
+      "Free fatty acids in your blood increase 2–3x during this window. Each molecule is being transported to mitochondria across your body to be burned for ATP.",
+      "Your respiratory quotient (RQ) drops from ~0.85 to ~0.75, meaning measurably more of each breath is powered by fat rather than sugar.",
+      "Adiponectin — a hormone from fat cells that improves insulin sensitivity — increases during fasting. Your fat cells are making you MORE insulin-sensitive as they shrink.",
+      "Lipolysis (fat breakdown) rate increases 50–100% compared to the fed state. Every hour in this zone, you're burning significantly more stored fat than you would eating normally.",
     ],
     whatsHappening:
       "Your fat cells are literally shrinking right now. Norepinephrine is attaching to receptors on fat cells and triggering lipase enzymes to crack open stored triglycerides. Free fatty acids are flooding into your bloodstream and being ferried to muscles and organs that burn them directly for fuel. You are becoming a fat-burning machine.",
@@ -84,6 +96,10 @@ export const ZONE_SCIENCE: ZoneScienceContent[] = [
       "AMPK — your cells' fuel sensor — is now activated, switching on fat oxidation and initiating autophagy, the process where cells digest their own damaged components.",
       "mTOR (the growth/storage pathway) is suppressed. This is significant: mTOR suppression is one of the most consistently linked mechanisms to longevity across species from yeast to primates.",
       "Blood ketones begin appearing — typically 0.2–0.5 mmol/L. Even at these low levels, ketones signal your brain to increase BDNF, a protein that grows new neurons.",
+      "NF-kB, a master inflammatory pathway, is suppressed during fasting. This reduces the low-grade chronic inflammation linked to heart disease, diabetes, and cancer.",
+      "Sirtuins — a family of 'longevity proteins' — are activated by the NAD+ increase that occurs during fasting. These proteins directly repair DNA damage.",
+      "Your body's antioxidant defenses (SOD, catalase, glutathione) are upregulated during the metabolic switch. Cells are hardening themselves against oxidative stress.",
+      "Insulin sensitivity improves by 20–30% within 12–16 hours of fasting. The same amount of insulin now has a significantly stronger effect — your body needs less to do more.",
     ],
     whatsHappening:
       "This is the moment researchers call the 'metabolic switch' — the transition from glucose to fat/ketone metabolism. Your liver is now converting fatty acids into ketone bodies (beta-hydroxybutyrate and acetoacetate). Your cells are activating ancient survival pathways: cleaning out damaged proteins, strengthening stress resistance, and boosting repair mechanisms that are dormant when food is abundant.",
@@ -101,6 +117,10 @@ export const ZONE_SCIENCE: ZoneScienceContent[] = [
       "Growth hormone peaks at 5x baseline around the 20–24 hour mark. This is the highest natural GH surge achievable without pharmaceutical intervention. (Ho et al., 1988)",
       "Autophagy markers increase significantly by 16–24 hours. Damaged mitochondria, misfolded proteins, and intracellular pathogens are being broken down and recycled. (Alirezaei et al., 2010)",
       "BDNF (brain-derived neurotrophic factor) increases 50–400% with ketone presence, promoting the growth of new synapses and protecting existing neurons against degeneration.",
+      "Beta-hydroxybutyrate (BHB) — the primary ketone — acts as an HDAC inhibitor, turning on genes that protect against oxidative stress. It's an epigenetic signal, not just fuel.",
+      "Mitochondrial biogenesis increases — your cells are building brand new mitochondria to replace the damaged ones that autophagy cleared out. More efficient energy factories.",
+      "Telomerase activity may increase during extended fasting periods, potentially slowing the shortening of telomeres — the 'aging clock' caps on your chromosomes.",
+      "Glycogen stores are essentially empty. 95%+ of your energy is now coming from fat and ketones. You are running on stored body fat as your primary fuel.",
     ],
     whatsHappening:
       "Your body has fully transitioned to a fat-and-ketone economy. Your liver is steadily producing ketone bodies from your fat stores. These ketones are not just fuel — they are signaling molecules that activate genetic pathways for cellular repair, inflammation reduction, and oxidative stress resistance. Your brain is bathed in BDNF, building new neural connections. Your cells are recycling their damaged parts. This is your body in deep maintenance mode.",
@@ -118,6 +138,10 @@ export const ZONE_SCIENCE: ZoneScienceContent[] = [
       "White blood cell counts temporarily drop as the body recycles old, damaged immune cells. When you eat again, stem cells regenerate a fresh, more efficient immune system. (Cheng et al., Cell Stem Cell 2014)",
       "Inflammatory markers (CRP, IL-6, TNF-alpha) drop by 40–60% during extended fasts. This is comparable to the anti-inflammatory effect of pharmaceutical interventions.",
       "Insulin-like growth factor 1 (IGF-1) drops significantly — a key driver of the anti-cancer effects seen in fasting research. Lower IGF-1 shifts cells from 'growth mode' to 'protection mode.' (Longo, Cell Metab 2014)",
+      "Hematopoietic stem cells in your bone marrow shift to self-renewal mode. When you refeed, they produce a wave of fresh, naive immune cells — effectively rebooting immunity.",
+      "Intestinal stem cells increase their regenerative capacity during extended fasting. Your gut lining is preparing to rebuild itself stronger when you eat again. (Mihaylova et al., Cell Stem Cell 2018)",
+      "FOXO transcription factors are fully activated, turning on a suite of genes for DNA repair, tumor suppression, and stress resistance. These are among the most studied longevity pathways.",
+      "Protein recycling through autophagy becomes a significant amino acid source — your body is recycling 1–2g of protein per hour from damaged cellular components.",
     ],
     whatsHappening:
       "Your body is undergoing a profound cellular renovation. Old, dysfunctional immune cells are being cleared out and replaced by fresh stem cell-derived ones — Valter Longo's team at USC called this 'flipping a regenerative switch.' Autophagy is at its peak, dismantling misfolded proteins linked to Alzheimer's, Parkinson's, and other neurodegenerative conditions. Inflammation is plummeting. Your body is simultaneously cleaning, repairing, and rebuilding at the deepest cellular level.",
@@ -289,10 +313,12 @@ export function getRandomHungerFact(): string {
 }
 
 /**
- * Returns a random science fact for the current zone.
+ * Returns N random science facts for a zone, shuffled fresh each call.
+ * Used to randomize which facts appear so content feels fresh every session.
  */
-export function getRandomZoneFact(zoneId: string): string | null {
+export function getShuffledFacts(zoneId: string, count: number = 3): string[] {
   const content = getZoneScience(zoneId);
-  if (!content) return null;
-  return content.facts[Math.floor(Math.random() * content.facts.length)];
+  if (!content) return [];
+  const shuffled = [...content.facts].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
 }
