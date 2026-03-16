@@ -3,12 +3,20 @@ import type { MetabolicZone } from "../types";
 import { formatDuration, getNextZone, getTimeToNextZone, METABOLIC_ZONES } from "../lib/fasting";
 import { getZoneScience, getTipForHour } from "../lib/scienceContent";
 import { ZoneIcon } from "./ZoneIcon";
-import { Microscope, Lightbulb, Sparkles, ArrowRight } from "lucide-react";
+import { Lightbulb, ArrowRight } from "lucide-react";
 
 interface ZoneIndicatorProps {
   zone: MetabolicZone;
   zoneProgress: number;
   elapsedMs: number;
+}
+
+interface ScienceCard {
+  label: string;
+  labelColor: string;
+  headline: string;
+  body: string;
+  headlineColor?: string;
 }
 
 export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorProps) {
@@ -21,61 +29,69 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeCard, setActiveCard] = useState(0);
 
-  // Reset scroll position when zone changes
   useEffect(() => {
     setActiveCard(0);
     scrollRef.current?.scrollTo({ left: 0 });
   }, [zone.id]);
 
-  // Track which card is visible
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
     const cardWidth = el.offsetWidth;
-    const idx = Math.round(el.scrollLeft / cardWidth);
-    setActiveCard(idx);
+    setActiveCard(Math.round(el.scrollLeft / cardWidth));
   };
 
-  // Build swipeable cards based on current zone's science
-  const cards: { icon: typeof Microscope; iconColor: string; title: string; content: string }[] = [];
+  // Build cards — each with ONE focused idea, leading with the compelling stat
+  const cards: ScienceCard[] = [];
 
   if (science) {
+    // Card 1: What's happening — the headline
     cards.push({
-      icon: Microscope,
-      iconColor: zone.color,
-      title: "What's happening",
-      content: science.whatsHappening,
+      label: zone.name,
+      labelColor: zone.color,
+      headline: zone.status,
+      headlineColor: zone.color,
+      body: science.whatsHappening,
     });
 
-    science.facts.forEach((fact, i) => {
+    // Cards 2+: Individual facts — each leads with the number
+    science.facts.forEach((fact) => {
+      // Extract the first number/stat as the headline
+      const match = fact.match(/^(.+?(?:\d[\d–.,%%x]+\S*))/);
+      const headline = match ? match[1] : fact.slice(0, 50);
+      const body = match ? fact.slice(headline.length).trim().replace(/^[—–,.\s]+/, "") : "";
+
       cards.push({
-        icon: Sparkles,
-        iconColor: zone.color,
-        title: `Science ${i + 1}/${science.facts.length}`,
-        content: fact,
+        label: "Science",
+        labelColor: zone.color,
+        headline,
+        body: body.charAt(0).toUpperCase() + body.slice(1),
       });
     });
 
+    // Did you know
     cards.push({
-      icon: Sparkles,
-      iconColor: "var(--teal)",
-      title: "Did you know",
-      content: science.didYouKnow,
+      label: "Did you know",
+      labelColor: "var(--teal)",
+      headline: science.didYouKnow.split(".")[0] + ".",
+      body: science.didYouKnow.split(".").slice(1).join(".").trim(),
     });
 
+    // Keep going
     cards.push({
-      icon: ArrowRight,
-      iconColor: "var(--success)",
-      title: "Keep going",
-      content: science.keepGoingReward,
+      label: "Keep going",
+      labelColor: "var(--success)",
+      headline: "",
+      body: science.keepGoingReward,
     });
   }
 
+  // Tip
   cards.push({
-    icon: Lightbulb,
-    iconColor: "var(--warning)",
-    title: "Tip",
-    content: tip.tip,
+    label: "Tip",
+    labelColor: "var(--warning)",
+    headline: "",
+    body: tip.tip,
   });
 
   return (
@@ -118,7 +134,6 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
           scrollSnapType: "x mandatory",
           WebkitOverflowScrolling: "touch",
           scrollbarWidth: "none",
-          msOverflowStyle: "none",
           paddingLeft: "20px",
           paddingRight: "20px",
           gap: "8px",
@@ -127,29 +142,54 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
         {cards.map((card, i) => (
           <div
             key={`${zone.id}-${i}`}
-            className="card p-4 shrink-0"
+            className="card p-4 shrink-0 flex flex-col"
             style={{
               scrollSnapAlign: "start",
               width: "calc(100vw - 48px)",
-              minHeight: "120px",
+              minHeight: "130px",
             }}
           >
-            <div className="flex items-center gap-2 mb-2">
-              <card.icon size={14} strokeWidth={1.5} style={{ color: card.iconColor }} />
-              <span className="text-[11px] font-medium uppercase tracking-[0.04em]"
-                style={{ color: card.iconColor }}>
-                {card.title}
+            {/* Label */}
+            <div className="flex items-center gap-1.5 mb-2">
+              {card.label === "Keep going" ? (
+                <ArrowRight size={12} strokeWidth={1.5} style={{ color: card.labelColor }} />
+              ) : card.label === "Tip" ? (
+                <Lightbulb size={12} strokeWidth={1.5} style={{ color: card.labelColor }} />
+              ) : (
+                <ZoneIcon zoneId={zone.id} color={card.labelColor} size={12} />
+              )}
+              <span
+                className="text-[11px] font-medium uppercase tracking-[0.04em]"
+                style={{ color: card.labelColor }}
+              >
+                {card.label}
+              </span>
+              {/* Card position */}
+              <span className="text-[11px] ml-auto" style={{ color: "var(--text-quaternary)" }}>
+                {i + 1}/{cards.length}
               </span>
             </div>
-            <p className="text-[14px] leading-[1.55]" style={{ color: "var(--text-primary)" }}>
-              {card.content}
+
+            {/* Headline — the hook */}
+            {card.headline && (
+              <p
+                className="text-[16px] font-semibold leading-[1.3] mb-1.5"
+                style={{ color: card.headlineColor ?? "var(--text-primary)" }}
+              >
+                {card.headline}
+              </p>
+            )}
+
+            {/* Body */}
+            <p className="text-[13px] leading-[1.5]" style={{ color: "var(--text-secondary)" }}>
+              {card.body}
             </p>
           </div>
         ))}
       </div>
 
       {/* Dot indicators */}
-      <div className="flex justify-center gap-1.5 mt-3">
+      <div className="flex justify-center gap-1.5 mt-2.5">
         {cards.map((_, i) => (
           <div
             key={i}
@@ -163,9 +203,9 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
         ))}
       </div>
 
-      {/* Next zone + timeline */}
-      <div className="px-5 mt-3 flex flex-col" style={{ gap: "var(--card-gap)" }}>
-        {nextZone && timeToNextFmt && (
+      {/* Next zone */}
+      {nextZone && timeToNextFmt && (
+        <div className="px-5 mt-3">
           <div className="card px-4 py-3 flex items-center gap-3">
             <div
               className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
@@ -183,24 +223,24 @@ export function ZoneIndicator({ zone, zoneProgress, elapsedMs }: ZoneIndicatorPr
               {timeToNextFmt.hours}:{timeToNextFmt.minutes}
             </div>
           </div>
-        )}
-
-        {/* Zone timeline */}
-        <div className="flex gap-1 px-1">
-          {METABOLIC_ZONES.map((z) => {
-            const isActive = z.id === zone.id;
-            const isPast = z.endHour <= zone.startHour;
-            return (
-              <div
-                key={z.id}
-                className="flex-1 h-[3px] rounded-full transition-all duration-500"
-                style={{
-                  background: isActive ? z.color : isPast ? `${z.color}50` : "var(--fill-tertiary)",
-                }}
-              />
-            );
-          })}
         </div>
+      )}
+
+      {/* Zone timeline */}
+      <div className="flex gap-1 px-6 mt-3">
+        {METABOLIC_ZONES.map((z) => {
+          const isActive = z.id === zone.id;
+          const isPast = z.endHour <= zone.startHour;
+          return (
+            <div
+              key={z.id}
+              className="flex-1 h-[3px] rounded-full transition-all duration-500"
+              style={{
+                background: isActive ? z.color : isPast ? `${z.color}50` : "var(--fill-tertiary)",
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );
