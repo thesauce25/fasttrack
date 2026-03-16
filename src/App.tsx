@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { TimerView } from "./views/TimerView";
 import { HistoryView } from "./views/HistoryView";
 import { StatsView } from "./views/StatsView";
@@ -19,6 +20,7 @@ export default function App() {
       </main>
       <TabBar active={activeTab} onChange={setActiveTab} />
       <InstallPrompt />
+      <Analytics />
     </div>
   );
 }
