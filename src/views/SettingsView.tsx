@@ -1,13 +1,16 @@
 import { useStore } from "../store";
 import { downloadJson, importFromJson } from "../lib/storage";
-import { Download, Upload, ChevronRight } from "lucide-react";
-import { useRef } from "react";
+import { Download, Upload, ChevronRight, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
 
 export function SettingsView() {
   const exportData = useStore((s) => s.exportData);
   const importData = useStore((s) => s.importData);
+  const resetData = useStore((s) => s.resetData);
   const fasts = useStore((s) => s.fasts);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [confirmReset, setConfirmReset] = useState(false);
+
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -44,13 +47,41 @@ export function SettingsView() {
         <button
           onClick={() => fileInputRef.current?.click()}
           className="flex items-center w-full px-4 py-3 transition-all active:bg-[var(--fill-tertiary)]"
-          style={{ background: "transparent", border: "none", textAlign: "left" }}
+          style={{ background: "transparent", border: "none", textAlign: "left", borderBottom: "0.33px solid var(--separator)" }}
         >
           <Upload size={17} strokeWidth={1.5} className="mr-3" style={{ color: "var(--accent)" }} />
           <span className="text-[15px] flex-1" style={{ color: "var(--accent)" }}>Import Data</span>
           <ChevronRight size={14} strokeWidth={2} style={{ color: "var(--text-quaternary)" }} />
         </button>
         <input ref={fileInputRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+
+        {confirmReset ? (
+          <div className="px-4 py-3 flex gap-3">
+            <button
+              onClick={() => { resetData(); setConfirmReset(false); }}
+              className="flex-1 h-[36px] text-[13px] font-semibold transition-all active:scale-[0.97]"
+              style={{ borderRadius: "var(--radius-btn)", background: "var(--danger)", color: "white" }}
+            >
+              Confirm Reset
+            </button>
+            <button
+              onClick={() => setConfirmReset(false)}
+              className="flex-1 h-[36px] text-[13px] font-medium transition-all active:scale-[0.97]"
+              style={{ borderRadius: "var(--radius-btn)", background: "var(--fill-tertiary)", color: "var(--text-secondary)" }}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmReset(true)}
+            className="flex items-center w-full px-4 py-3 transition-all active:bg-[var(--fill-tertiary)]"
+            style={{ background: "transparent", border: "none", textAlign: "left" }}
+          >
+            <Trash2 size={17} strokeWidth={1.5} className="mr-3" style={{ color: "var(--danger)" }} />
+            <span className="text-[15px] flex-1" style={{ color: "var(--danger)" }}>Reset All Data</span>
+          </button>
+        )}
       </div>
 
       {/* About */}

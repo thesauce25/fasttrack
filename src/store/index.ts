@@ -46,6 +46,7 @@ interface AppState {
   // Data
   exportData: () => AppData;
   importData: (data: AppData) => void;
+  resetData: () => void;
 
   // Internal
   _recomputeStats: () => void;
@@ -144,6 +145,15 @@ export const useStore = create<AppState>()(
           milestones: data.milestones,
         });
         get()._recomputeStats();
+      },
+
+      resetData: () => {
+        set({
+          fasts: [],
+          logs: [],
+          milestones: [],
+          stats: computeStats([]),
+        });
       },
 
       _recomputeStats: () => {
