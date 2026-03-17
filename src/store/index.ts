@@ -33,7 +33,8 @@ interface AppState {
   stats: Stats;
 
   // Fast actions
-  startFast: (type?: FastType, customMinutes?: number) => void;
+  startFast: (type?: FastType, customMinutes?: number, customStartTime?: number) => void;
+  editActiveFastStart: (newStartTime: number) => void;
   endFast: (status: Extract<FastStatus, "completed" | "broken">, customEndTime?: number) => void;
   deleteFast: (id: string) => void;
 
@@ -63,7 +64,7 @@ export const useStore = create<AppState>()(
       milestones: [] as MilestoneRecord[],
       stats: computeStats([]),
 
-      startFast: (type, customMinutes) => {
+      startFast: (type, customMinutes, customStartTime) => {
         const active = get().fasts.find((f) => f.status === "active");
         if (active) return;
 
@@ -76,7 +77,7 @@ export const useStore = create<AppState>()(
 
         const session: FastSession = {
           id: nanoid(),
-          startTime: Date.now(),
+          startTime: customStartTime ?? Date.now(),
           endTime: null,
           targetDuration: targetMs,
           actualDuration: null,
@@ -86,6 +87,14 @@ export const useStore = create<AppState>()(
         };
 
         set((state) => ({ fasts: [session, ...state.fasts] }));
+      },
+
+      editActiveFastStart: (newStartTime) => {
+        set((state) => ({
+          fasts: state.fasts.map((f) =>
+            f.status === "active" ? { ...f, startTime: newStartTime } : f
+          ),
+        }));
       },
 
       endFast: (status, customEndTime) => {

@@ -16,7 +16,8 @@ import { Clock } from "lucide-react";
 
 function ActiveFast({ activeFast }: { activeFast: FastSession }) {
   const endFast = useStore((s) => s.endFast);
-  const [endStep, setEndStep] = useState<"none" | "confirm" | "when">("none");
+  const editStart = useStore((s) => s.editActiveFastStart);
+  const [endStep, setEndStep] = useState<"none" | "confirm" | "when" | "editStart">("none");
   const [customTime, setCustomTime] = useState("");
 
   const { elapsedMs } = useTimerDisplay(activeFast.startTime, activeFast.targetDuration);
@@ -40,6 +41,17 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
     if (d.getTime() < activeFast.startTime) { handleEndNow(); return; }
     endFast("completed", d.getTime()); setEndStep("none");
   };
+  const handleEditStart = () => {
+    if (!customTime) return;
+    const [h, m] = customTime.split(":").map(Number);
+    const d = new Date(); d.setHours(h, m, 0, 0);
+    if (d.getTime() > Date.now()) d.setDate(d.getDate() - 1);
+    editStart(d.getTime());
+    setEndStep("none");
+    setCustomTime("");
+  };
+
+  const startTimeStr = new Date(activeFast.startTime).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
   return (
     <div className="flex flex-col items-center pt-4 pb-6 scrollable h-full">
@@ -74,28 +86,58 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
       <ZoneIndicator zone={zone} zoneProgress={zoneProg} elapsedMs={elapsedMs} />
 
       <div className="px-5 mt-5 w-full">
+        {/* Started at — tappable to edit */}
+        {endStep === "none" && (
+          <button
+            onClick={() => { setCustomTime(""); setEndStep("editStart"); }}
+            className="w-full text-[13px] mb-3"
+            style={{ background: "none", border: "none", color: "var(--text-muted)" }}
+          >
+            Started at {startTimeStr} · Tap to adjust
+          </button>
+        )}
+
         {endStep === "none" && (
           <button onClick={() => setEndStep("confirm")}
-            className="w-full h-[44px] text-[17px] card transition-all duration-150 active:scale-[0.97]"
+            className="w-full h-[44px] text-[17px] card interactive"
             style={{ color: "var(--text-secondary)" }}>End Fast</button>
         )}
+
+        {endStep === "editStart" && (
+          <div className="card p-4">
+            <p className="text-[15px] font-medium mb-3 text-center">Adjust start time</p>
+            <input type="time" value={customTime} onChange={(e) => setCustomTime(e.target.value)}
+              className="h-[44px] px-4 mb-3 text-[17px] text-center"
+              style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box", borderRadius: "var(--radius-btn)", background: "var(--bg-tertiary)", color: "var(--text-primary)", border: "0.33px solid var(--separator)", WebkitAppearance: "none", appearance: "none" }} />
+            <div className="flex gap-3">
+              <button onClick={handleEditStart}
+                className="flex-1 h-[44px] text-[15px] font-semibold interactive"
+                style={{ borderRadius: "var(--radius-btn)", background: "var(--fast-accent)", color: "white" }}>Update</button>
+              <button onClick={() => setEndStep("none")}
+                className="flex-1 h-[44px] text-[15px] font-medium card interactive"
+                style={{ color: "var(--text-secondary)" }}>Cancel</button>
+            </div>
+          </div>
+        )}
+
         {endStep === "confirm" && (
           <div className="card p-4">
             <p className="text-[15px] font-medium mb-3 text-center">End your fast?</p>
             <div className="flex gap-3 mb-3">
               <button onClick={handleEndNow}
-                className="flex-1 h-[44px] text-[15px] font-semibold transition-all duration-150 active:scale-[0.97]"
+                className="flex-1 h-[44px] text-[15px] font-semibold interactive"
                 style={{ borderRadius: "var(--radius-btn)", background: "var(--accent)", color: "white" }}>End Now</button>
               <button onClick={() => setEndStep("when")}
-                className="flex-1 h-[44px] text-[15px] font-semibold card transition-all duration-150 active:scale-[0.97] flex items-center justify-center gap-2"
+                className="flex-1 h-[44px] text-[15px] font-semibold card interactive flex items-center justify-center gap-2"
                 style={{ color: "var(--text-secondary)" }}>
                 <Clock size={15} strokeWidth={1.5} />Pick Time</button>
             </div>
             <button onClick={() => setEndStep("none")}
-              className="w-full h-[36px] text-[13px] font-medium transition-all active:scale-[0.97]"
+              className="w-full h-[36px] text-[13px] font-medium"
               style={{ color: "var(--text-muted)", background: "none", border: "none" }}>Keep Going</button>
           </div>
         )}
+
         {endStep === "when" && (
           <div className="card p-4">
             <p className="text-[15px] font-medium mb-3 text-center">When did you break your fast?</p>
@@ -104,10 +146,10 @@ function ActiveFast({ activeFast }: { activeFast: FastSession }) {
               style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box", borderRadius: "var(--radius-btn)", background: "var(--bg-tertiary)", color: "var(--text-primary)", border: "0.33px solid var(--separator)", WebkitAppearance: "none", appearance: "none" }} />
             <div className="flex gap-3">
               <button onClick={handleEndAtTime}
-                className="flex-1 h-[44px] text-[15px] font-semibold transition-all duration-150 active:scale-[0.97]"
+                className="flex-1 h-[44px] text-[15px] font-semibold interactive"
                 style={{ borderRadius: "var(--radius-btn)", background: "var(--accent)", color: "white" }}>Confirm</button>
               <button onClick={() => setEndStep("confirm")}
-                className="flex-1 h-[44px] text-[15px] font-medium card transition-all duration-150 active:scale-[0.97]"
+                className="flex-1 h-[44px] text-[15px] font-medium card interactive"
                 style={{ color: "var(--text-secondary)" }}>Back</button>
             </div>
           </div>
@@ -147,8 +189,20 @@ function IdleState() {
   const startFast = useStore((s) => s.startFast);
   const stats = useStore((s) => s.stats);
   const fasts = useStore((s) => s.fasts);
+  const [startMode, setStartMode] = useState<"none" | "pick">("none");
+  const [customStartTime, setCustomStartTime] = useState("");
 
   const lastFast = fasts.find((f) => f.status === "completed") ?? null;
+
+  const handleStartAtTime = () => {
+    if (!customStartTime) return;
+    const [h, m] = customStartTime.split(":").map(Number);
+    const d = new Date();
+    d.setHours(h, m, 0, 0);
+    if (d.getTime() > Date.now()) d.setDate(d.getDate() - 1);
+    startFast(undefined, undefined, d.getTime());
+    setStartMode("none");
+  };
 
   // This week computation
   const today = new Date();
@@ -192,19 +246,54 @@ function IdleState() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Element 3: Begin Fasting — fixed in thumb zone */}
+      {/* Element 3: Begin Fasting — with start time option */}
       <div className="shrink-0 w-full px-5 pb-3">
-        <button
-          onClick={() => startFast()}
-          className="w-full h-[56px] text-[17px] font-semibold interactive"
-          style={{
-            borderRadius: "var(--radius-btn)",
-            background: "var(--fast-accent)",
-            color: "white",
-          }}
-        >
-          Begin Fasting
-        </button>
+        {startMode === "none" && (
+          <>
+            <button
+              onClick={() => startFast()}
+              className="w-full h-[56px] text-[17px] font-semibold interactive mb-2"
+              style={{
+                borderRadius: "var(--radius-btn)",
+                background: "var(--fast-accent)",
+                color: "white",
+              }}
+            >
+              Begin Fasting
+            </button>
+            <button
+              onClick={() => setStartMode("pick")}
+              className="w-full h-[36px] text-[13px] font-medium"
+              style={{ background: "none", border: "none", color: "var(--text-muted)" }}
+            >
+              I started earlier
+            </button>
+          </>
+        )}
+        {startMode === "pick" && (
+          <div className="card p-4">
+            <p className="text-[15px] font-medium mb-3 text-center">When did you start fasting?</p>
+            <input
+              type="time"
+              value={customStartTime}
+              onChange={(e) => setCustomStartTime(e.target.value)}
+              className="h-[44px] px-4 mb-3 text-[17px] text-center"
+              style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box", borderRadius: "var(--radius-btn)", background: "var(--bg-tertiary)", color: "var(--text-primary)", border: "0.33px solid var(--separator)", WebkitAppearance: "none", appearance: "none" }}
+            />
+            <div className="flex gap-3">
+              <button onClick={handleStartAtTime}
+                className="flex-1 h-[44px] text-[15px] font-semibold interactive"
+                style={{ borderRadius: "var(--radius-btn)", background: "var(--fast-accent)", color: "white" }}>
+                Start
+              </button>
+              <button onClick={() => setStartMode("none")}
+                className="flex-1 h-[44px] text-[15px] font-medium card interactive"
+                style={{ color: "var(--text-secondary)" }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
